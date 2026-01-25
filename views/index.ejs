@@ -1,0 +1,78 @@
+<section class="hero-section position-relative overflow-hidden">
+    
+    <div id="heroCarousel" class="carousel slide carousel-fade h-100" data-bs-ride="carousel" data-bs-interval="3000">
+      <div class="carousel-inner h-100">
+        
+        <% if(typeof galleryImages !== 'undefined' && galleryImages.length > 0) { %>
+          <% galleryImages.forEach((img, index) => { %>
+            <div class="carousel-item h-100 <%= index === 0 ? 'active' : '' %>">
+              <img src="<%= img.imageUrl %>" class="d-block w-100 h-100" alt="Slide">
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="carousel-item h-100 active">
+            <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1920" class="d-block w-100 h-100" alt="Hostel">
+          </div>
+          <div class="carousel-item h-100">
+            <img src="https://images.unsplash.com/photo-1596276020587-8044fe049813?q=80&w=1920" class="d-block w-100 h-100" alt="Campus">
+          </div>
+        <% } %>
+
+      </div>
+    </div>
+
+    <div class="position-absolute top-50 start-50 translate-middle text-center text-white w-75 hero-content" style="z-index: 10;">
+        <h1 class="display-3 fw-bold mb-3">Welcome to Next-Gen Hostel</h1>
+        <p class="lead mb-4 text-light">Experience world-class facilities with premium security and comfort.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/users/login" class="btn btn-primary btn-lg px-5 rounded-pill">Student Login</a>
+            <a href="/setup-admin" class="btn btn-outline-light btn-lg px-5 rounded-pill">Admin Setup</a>
+        </div>
+    </div>
+
+    <div class="position-absolute bottom-0 start-50 translate-middle-x mb-4 text-white animate-bounce">
+        <i class="bi bi-chevron-down fs-2"></i>
+    </div>
+</section>
+
+<section id="features" class="py-5 bg-dark features-section">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h6 class="text-primary fw-bold text-uppercase">Why Choose Us</h6>
+            <h2 class="text-white fw-bold display-5">Premium Facilities</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="p-4 rounded-4 text-center h-100 hover-effect">
+                    <div class="icon-box">
+                        <i class="bi bi-wifi fs-1"></i>
+                    </div>
+                    <h4 class="text-white fw-bold">High-Speed WiFi</h4>
+                    <p class="text-muted">24/7 unlimited high-speed internet access for your studies and entertainment.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="p-4 rounded-4 text-center h-100 hover-effect">
+                    <div class="icon-box">
+                        <i class="bi bi-shield-lock fs-1"></i>
+                    </div>
+                    <h4 class="text-white fw-bold">Secure Campus</h4>
+                    <p class="text-muted">CCTV surveillance and 24/7 professional security staff for your complete safety.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-4 rounded-4 text-center h-100 hover-effect">
+                    <div class="icon-box">
+                        <i class="bi bi-cup-hot fs-1"></i>
+                    </div>
+                    <h4 class="text-white fw-bold">Hygienic Food</h4>
+                    <p class="text-muted">Healthy and delicious meals served 4 times a day in our clean and modern mess.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

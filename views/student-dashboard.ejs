@@ -1,0 +1,168 @@
+<div class="row g-4">
+    
+    <div class="col-lg-4">
+        
+        <div class="panel text-center mb-4">
+            <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=0d6efd&color=fff" class="rounded-circle mb-3 shadow" width="80" height="80">
+            <h4 class="fw-bold mb-1"><%= user.name %></h4>
+            <p class="text-muted mb-3"><%= user.email %></p>
+            
+            <div class="d-flex justify-content-center gap-2 mb-3">
+                <span class="badge bg-dark border border-secondary px-3 py-2">Roll No: <%= user.rollNumber %></span>
+                <span class="badge <%= user.status === 'present' ? 'bg-success' : 'bg-warning text-dark' %> px-3 py-2">
+                    <%= user.status === 'present' ? 'Present' : 'On Leave' %>
+                </span>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h5 class="mb-3 border-bottom border-secondary pb-2"><i class="bi bi-house me-2"></i>My Room</h5>
+            
+            <% if(room) { %>
+                <div class="text-center mb-3">
+                    <h1 class="display-4 fw-bold text-primary"><%= room.roomNumber %></h1>
+                    <span class="badge bg-secondary"><%= room.type %> Room</span>
+                </div>
+
+                <h6 class="text-muted small text-uppercase mt-4 mb-2">Roommates</h6>
+                <ul class="list-group list-group-flush bg-transparent">
+                    <% room.occupants.forEach(occupant => { %>
+                        <% if(occupant._id.toString() !== user._id.toString()) { %>
+                            <li class="list-group-item bg-transparent text-white px-0 d-flex align-items-center gap-2 border-secondary">
+                                <img src="https://ui-avatars.com/api/?name=<%= occupant.name %>" class="avatar-sm">
+                                <span><%= occupant.name %></span>
+                            </li>
+                        <% } %>
+                    <% }) %>
+                    <% if(room.occupants.length === 1) { %>
+                        <li class="list-group-item bg-transparent text-muted small px-0 fst-italic">
+                            You are currently alone in this room.
+                        </li>
+                    <% } %>
+                </ul>
+
+                <button class="btn btn-outline-warning w-100 mt-3" data-bs-toggle="modal" data-bs-target="#changeRoomModal">
+                    Request Room Change
+                </button>
+
+            <% } else { %>
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-exclamation-circle fs-1 d-block mb-2"></i>
+                    No Room Assigned Yet.<br>
+                    <small>Please contact Admin/Staff.</small>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+
+    <div class="col-lg-8">
+        
+        <div class="panel mb-4">
+            <h5 class="mb-3"><i class="bi bi-pencil-square me-2"></i>Raise a Complaint</h5>
+            <form action="/student/complaint/add" method="POST">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="small text-muted">Category</label>
+            <select name="category" class="form-select bg-dark text-white border-secondary">
+                <option value="Electricity">Electricity</option>
+                <option value="Plumbing">Plumbing</option>
+                <option value="Furniture">Furniture</option>
+                <option value="WiFi">WiFi</option>
+                <option value="Cleaning">Cleaning</option>
+                <option value="Food">Food</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="small text-muted">Priority</label>
+            <select name="priority" class="form-select bg-dark text-white border-secondary">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+            </select>
+        </div>
+        <div class="col-12">
+            <input type="text" name="title" class="form-control bg-dark text-white border-secondary" placeholder="Issue Title (e.g. Fan not working)" required>
+        </div>
+        <div class="col-12">
+            <textarea name="description" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Describe the problem..." required></textarea>
+        </div>
+        <div class="col-12 text-end">
+            <button class="btn btn-primary px-4">Submit Complaint</button>
+        </div>
+    </div>
+</form>
+
+        </div>
+
+        <div class="panel h-100">
+            <h5 class="mb-3 border-bottom border-secondary pb-2"><i class="bi bi-clock-history me-2"></i>Complaint History</h5>
+            
+            <% if(complaints.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="table table-custom mb-0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Issue</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% complaints.forEach(c => { %>
+                                <tr>
+                                    <td class="text-muted small"><%= new Date(c.createdAt).toLocaleDateString() %></td>
+                                    <td><%= c.title %></td>
+                                    <td><span class="badge bg-secondary"><%= c.category %></span></td>
+                                    <td>
+                                        <% if(c.status === 'resolved') { %>
+                                            <span class="badge bg-success">Resolved</span>
+                                        <% } else { %>
+                                            <span class="badge bg-danger">Pending</span>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-clipboard-check fs-1 d-block mb-2"></i>
+                    No past complaints found.
+                </div>
+            <% } %>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="changeRoomModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Request Room Change</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/student/request-room-change" method="POST">
+                <div class="modal-body">
+                    <% if(roomRequest) { %>
+                        <div class="alert alert-warning">
+                            <i class="bi bi-clock"></i> You already have a pending request.
+                        </div>
+                    <% } else { %>
+                        <p class="text-muted small">This request will be sent to the Admin for approval.</p>
+                        <textarea name="reason" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Reason for change..." required></textarea>
+                    <% } %>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <% if(!roomRequest) { %>
+                        <button class="btn btn-warning text-dark fw-bold">Send Request</button>
+                    <% } %>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

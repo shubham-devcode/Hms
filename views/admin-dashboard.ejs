@@ -1,0 +1,365 @@
+<% if (section === 'dashboard') { %>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="panel stat-card">
+        <div>
+          <h6 class="text-muted text-uppercase small">Students</h6>
+          <h2 class="m-0 fw-bold"><%= stats.totalStudents %></h2>
+        </div>
+        <div class="stat-icon icon-primary"><i class="bi bi-people"></i></div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="panel stat-card">
+        <div>
+          <h6 class="text-muted text-uppercase small">Occupancy</h6>
+          <h2 class="m-0 fw-bold"><%= stats.occupancyRate %>%</h2>
+        </div>
+        <div class="stat-icon icon-success"><i class="bi bi-pie-chart"></i></div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="panel stat-card">
+        <div>
+          <h6 class="text-muted text-uppercase small">Staff</h6>
+          <h2 class="m-0 fw-bold"><%= stats.totalStaff %></h2>
+        </div>
+        <div class="stat-icon icon-warning"><i class="bi bi-person-badge"></i></div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="panel stat-card">
+        <div>
+          <h6 class="text-muted text-uppercase small">Issues</h6>
+          <h2 class="m-0 fw-bold"><%= complaints.length %></h2>
+        </div>
+        <div class="stat-icon icon-danger"><i class="bi bi-exclamation-triangle"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel h-100">
+        <h5 class="mb-3 border-bottom border-secondary pb-2">⚠️ Recent Activity</h5>
+        <% if(complaints.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-custom mb-0">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Issue</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% complaints.slice(0, 5).forEach(c => { %>
+                  <tr>
+                    <td><%= c.student ? c.student.name : 'Unknown' %></td>
+                    <td><span class="badge bg-secondary"><%= c.category %></span> <%= c.title %></td>
+                    <td class="text-muted small"><%= new Date(c.createdAt).toLocaleDateString() %></td>
+                    <td>
+                      <form action="/admin/complaints/<%= c._id %>/resolve" method="POST">
+                        <button class="btn btn-sm btn-outline-success">Resolve</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="text-center py-5 text-muted">No pending issues.</div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="panel h-100">
+            <h5 class="mb-3 border-bottom border-secondary pb-2">⚡ Quick Actions</h5>
+            <div class="d-grid gap-2">
+                <a href="/admin/dashboard?section=rooms" class="btn btn-outline-primary text-start"><i class="bi bi-plus-circle me-2"></i> Add Room</a>
+                <a href="/admin/dashboard?section=students" class="btn btn-outline-info text-start"><i class="bi bi-person-plus me-2"></i> Add Student</a>
+                <a href="/admin/dashboard?section=gallery" class="btn btn-outline-warning text-start"><i class="bi bi-image me-2"></i> Update Gallery</a>
+            </div>
+        </div>
+    </div>
+  </div>
+
+<% } %>
+
+
+<% if (section === 'rooms') { %>
+
+  <div class="panel mb-4">
+    <h4 class="mb-3">Add New Room</h4>
+    <form action="/admin/rooms/add" method="POST" class="row g-3">
+      <div class="col-md-2">
+        <input type="text" name="roomNumber" class="form-control bg-dark text-white border-secondary" placeholder="Room No" required>
+      </div>
+      <div class="col-md-2">
+        <select name="type" class="form-select bg-dark text-white border-secondary">
+          <option value="Single">Single</option>
+          <option value="Double">Double</option>
+          <option value="Triple">Triple</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input type="number" name="capacity" class="form-control bg-dark text-white border-secondary" placeholder="Capacity" required>
+      </div>
+      <div class="col-md-2">
+        <input type="number" name="price" class="form-control bg-dark text-white border-secondary" placeholder="Price">
+      </div>
+      <div class="col-md-4">
+        <input type="text" name="roomImage" class="form-control bg-dark text-white border-secondary" placeholder="Image URL">
+      </div>
+      <div class="col-12 text-end">
+        <button class="btn btn-primary">Create Room</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="row g-3">
+    <% rooms.forEach(room => { %>
+      <div class="col-md-4 col-lg-3">
+        <div class="panel p-0 overflow-hidden h-100 position-relative">
+          <div class="room-card-header" style="background-image: url('<%= (room.images && room.images.length > 0) ? room.images[0] : "https://via.placeholder.com/300" %>');">
+             <span class="badge bg-dark room-type-badge"><%= room.type %></span>
+          </div>
+          
+          <div class="p-3">
+            <div class="d-flex justify-content-between mb-2">
+              <h5 class="fw-bold m-0">Room <%= room.roomNumber %></h5>
+              <small class="text-warning">₹<%= room.price %></small>
+            </div>
+            
+            <div class="d-flex justify-content-between small text-muted mb-1">
+               <span>Occupants:</span>
+               <span><%= room.occupants.length %> / <%= room.capacity %></span>
+            </div>
+
+            <div class="progress mb-3 progress-thin">
+              <% let percent = (room.occupants.length / room.capacity) * 100 %>
+              <div class="progress-bar <%= percent >= 100 ? 'bg-danger' : 'bg-success' %>" <%= percent %>%></div>
+            </div>
+
+            <form action="/admin/rooms/delete/<%= room._id %>" method="POST" onsubmit="return confirm('Delete Room?')">
+              <button class="btn btn-sm btn-outline-danger w-100">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+<% } %>
+
+
+<% if (section === 'students') { %>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="m-0">Students</h3>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+      <i class="bi bi-person-plus"></i> Add Student
+    </button>
+  </div>
+
+  <div class="panel p-3 mb-3 d-flex gap-2 search-bar-container">
+    <form action="/admin/dashboard" method="GET" class="d-flex gap-2 flex-grow-1">
+      <input type="hidden" name="section" value="students">
+      <input type="text" name="search" class="form-control bg-dark text-white border-secondary" placeholder="Search..." value="<%= typeof searchQuery != 'undefined' ? searchQuery : '' %>">
+      <button class="btn btn-primary">Search</button>
+    </form>
+    <a href="/admin/students/export" class="btn btn-outline-warning">Export CSV</a>
+  </div>
+
+  <div class="panel p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-custom mb-0">
+        <thead>
+          <tr>
+            <th>Roll No</th>
+            <th>Name & Email</th>
+            <th>Room</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if(students.length > 0) { %>
+            <% students.forEach(student => { %>
+              <tr>
+                <td><span class="badge bg-secondary"><%= student.rollNumber %></span></td>
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=<%= student.name %>" class="avatar-sm">
+                    <div>
+                      <div class="fw-bold"><%= student.name %></div>
+                      <div class="small text-muted"><%= student.email %></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <% if(student.room) { %>
+                    <span class="badge bg-success"><%= student.room.roomNumber %></span>
+                  <% } else { %>
+                    <span class="badge bg-danger">Unassigned</span>
+                  <% } %>
+                </td>
+                <td>
+                  <span class="badge <%= student.status === 'present' ? 'bg-success' : 'bg-warning text-dark' %>">
+                    <%= student.status %>
+                  </span>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#assignModal<%= student._id %>">
+                    <i class="bi bi-house-door"></i>
+                  </button>
+                  <form action="/admin/students/delete/<%= student._id %>" method="POST" class="d-inline" onsubmit="return confirm('Delete?')">
+                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+
+              <div class="modal fade" id="assignModal<%= student._id %>" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content bg-dark text-white border-secondary">
+                    <div class="modal-header border-secondary">
+                      <h5 class="modal-title">Assign Room</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form action="/admin/students/assign/<%= student._id %>" method="POST">
+                      <div class="modal-body">
+                        <select name="roomId" class="form-select bg-dark text-white border-secondary">
+                          <% rooms.forEach(r => { %>
+                            <% const isFull = r.occupants.length >= r.capacity %>
+                            <option value="<%= r._id %>" <%= isFull ? 'disabled' : '' %>>
+                              Room <%= r.roomNumber %> (<%= r.occupants.length %>/<%= r.capacity %>)
+                            </option>
+                          <% }) %>
+                        </select>
+                      </div>
+                      <div class="modal-footer border-secondary">
+                        <button class="btn btn-primary">Assign</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="5" class="text-center py-4 text-muted">No students found.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal fade" id="addStudentModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white border-secondary">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Register Student</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form action="/admin/students/add" method="POST">
+          <div class="modal-body">
+            <input type="text" name="name" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Full Name" required>
+            <input type="email" name="email" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Email" required>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button class="btn btn-success">Register</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<% } %>
+
+
+<% if (section === 'gallery') { %>
+  
+  <div class="panel mb-4">
+    <form action="/admin/gallery/add" method="POST" class="d-flex gap-2">
+      <input type="text" name="imageUrl" class="form-control bg-dark text-white border-secondary" placeholder="Image URL..." required>
+      <input type="text" name="title" class="form-control bg-dark text-white border-secondary" placeholder="Caption">
+      <button class="btn btn-primary">Add</button>
+    </form>
+  </div>
+
+  <div class="row g-3">
+    <% galleryImages.forEach(img => { %>
+      <div class="col-6 col-md-3">
+        <div class="card gallery-card h-100 border-0 bg-dark">
+          <div class="gallery-img-container">
+              <img src="<%= img.imageUrl %>" class="gallery-img">
+          </div>
+          <div class="card-body p-2 d-flex justify-content-between align-items-center border border-top-0 border-secondary rounded-bottom">
+            <small class="text-white text-truncate"><%= img.title || 'Image' %></small>
+            <form action="/admin/gallery/delete/<%= img._id %>" method="POST" class="m-0">
+              <button class="btn btn-sm btn-outline-danger border-0 p-1"><i class="bi bi-trash"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+<% } %>
+
+
+<% if (section === 'staff') { %>
+  
+  <div class="d-flex justify-content-between mb-3">
+    <h3>Staff</h3>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">Add Staff</button>
+  </div>
+
+  <div class="row g-3">
+    <% staff.forEach(s => { %>
+      <div class="col-md-4">
+        <div class="panel d-flex align-items-center gap-3">
+          <img src="https://ui-avatars.com/api/?name=<%= s.name %>" class="avatar-md">
+          <div class="flex-grow-1 overflow-hidden">
+            <h5 class="m-0 text-truncate"><%= s.name %></h5>
+            <small class="text-muted"><%= s.email %></small>
+          </div>
+          <% if(user._id.toString() !== s._id.toString()) { %>
+            <form action="/admin/staff/delete/<%= s._id %>" method="POST" onsubmit="return confirm('Remove?')">
+              <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+            </form>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <div class="modal fade" id="addStaffModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white border-secondary">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">New Staff</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form action="/admin/staff/add" method="POST">
+          <div class="modal-body">
+            <input type="text" name="name" class="form-control mb-2 bg-dark text-white border-secondary" placeholder="Name" required>
+            <input type="email" name="email" class="form-control mb-2 bg-dark text-white border-secondary" placeholder="Email" required>
+            <input type="password" name="password" class="form-control bg-dark text-white border-secondary" placeholder="Password" required>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<% } %>

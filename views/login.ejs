@@ -1,0 +1,161 @@
+<style>
+  /* Custom CSS for Unique Login Page */
+  body {
+    background: #f0f2f5; /* Light grey background */
+  }
+  
+  .login-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  /* Left Side - Gradient & Branding */
+  .login-left {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .login-left h2 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+
+  .login-left p {
+    opacity: 0.9;
+    font-size: 1.1rem;
+  }
+
+  /* Right Side - Form */
+  .login-right {
+    width: 50%;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-control {
+    background: #f8f9fa;
+    border: none;
+    height: 50px;
+    padding-left: 20px;
+  }
+
+  .form-control:focus {
+    box-shadow: none;
+    background: #fff;
+    border: 2px solid #764ba2;
+  }
+
+  .btn-login {
+    background: #764ba2;
+    border: none;
+    height: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+  }
+
+  .btn-login:hover {
+    background: #5b3a82;
+    transform: translateY(-2px);
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .login-left {
+      width: 100%;
+      padding: 30px;
+    }
+    .login-right {
+      width: 100%;
+      padding: 30px;
+    }
+  }
+</style>
+
+<div class="container login-container">
+  <div class="login-card">
+    
+    <div class="login-left">
+      <i class="bi bi-building" style="font-size: 4rem; margin-bottom: 20px;"></i>
+      <h2>HMS Portal</h2>
+      <p>Welcome back! Please login to manage your hostel activities.</p>
+    </div>
+
+    <div class="login-right">
+      <h3 class="text-center mb-4" style="color: #333; font-weight: bold;">Account Login</h3>
+
+      <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= success_msg %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+
+      <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= error_msg %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+
+      <% if (typeof error !== 'undefined' && error.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= error %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+
+      <form action="/users/login" method="POST">
+        
+        <div class="mb-3">
+          <label class="form-label text-muted">Email Address</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="fa fa-envelope text-muted"></i></span>
+            <input type="email" name="email" class="form-control" placeholder="admin@example.com" required>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label text-muted">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="fa fa-lock text-muted"></i></span>
+            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-login w-100 text-white">
+          Login Securely
+        </button>
+
+        <div class="text-center mt-3">
+          <small class="text-muted">Don't have an account? <a href="/users/register" style="color: #764ba2; font-weight: 600;">Register Here</a></small>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>
