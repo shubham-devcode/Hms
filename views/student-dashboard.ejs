@@ -1,167 +1,242 @@
-<div class="row g-4">
+<% if (section === 'profile') { %>
     
-    <div class="col-lg-4">
-        
-        <div class="panel text-center mb-4">
-            <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=0d6efd&color=fff" class="rounded-circle mb-3 shadow" width="80" height="80">
-            <h4 class="fw-bold mb-1"><%= user.name %></h4>
-            <p class="text-muted mb-3"><%= user.email %></p>
-            
-            <div class="d-flex justify-content-center gap-2 mb-3">
-                <span class="badge bg-dark border border-secondary px-3 py-2">Roll No: <%= user.rollNumber %></span>
-                <span class="badge <%= user.status === 'present' ? 'bg-success' : 'bg-warning text-dark' %> px-3 py-2">
-                    <%= user.status === 'present' ? 'Present' : 'On Leave' %>
-                </span>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="panel text-center p-4 h-100">
+                <div class="position-relative d-inline-block mb-3">
+                    <% if(user.profilePic) { %>
+                        <img src="<%= user.profilePic %>" class="rounded-circle shadow border border-3 border-primary" width="100" height="100" style="object-fit: cover;">
+                    <% } else { %>
+                        <div class="avatar-circle mx-auto bg-primary text-white border border-3 border-dark" style="width: 100px; height: 100px; font-size: 3rem;">
+                            <%= user.name.charAt(0) %>
+                        </div>
+                    <% } %>
+                    <span class="position-absolute bottom-0 end-0 p-2 bg-success border border-light rounded-circle"></span>
+                </div>
+                
+                <h4 class="fw-bold text-white mb-1"><%= user.name %></h4>
+                <p class="text-muted mb-3"><%= user.email %></p>
+                
+                <div class="d-flex justify-content-center gap-2 mb-4">
+                    <span class="badge bg-dark border border-secondary py-2 px-3">Roll: <%= user.rollNumber || 'N/A' %></span>
+                    <span class="badge <%= user.status === 'present' ? 'bg-success' : 'bg-warning text-dark' %> py-2 px-3">
+                        <%= user.status === 'present' ? 'Present' : 'On Leave' %>
+                    </span>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="bi bi-pencil me-2"></i> Edit Contact Info
+                    </button>
+                    <a href="/student/dashboard?section=room" class="btn btn-outline-primary">
+                        <i class="bi bi-house-door me-2"></i> View Room Details
+                    </a>
+                </div>
             </div>
         </div>
 
-        <div class="panel">
-            <h5 class="mb-3 border-bottom border-secondary pb-2"><i class="bi bi-house me-2"></i>My Room</h5>
-            
-            <% if(room) { %>
-                <div class="text-center mb-3">
-                    <h1 class="display-4 fw-bold text-primary"><%= room.roomNumber %></h1>
-                    <span class="badge bg-secondary"><%= room.type %> Room</span>
-                </div>
-
-                <h6 class="text-muted small text-uppercase mt-4 mb-2">Roommates</h6>
-                <ul class="list-group list-group-flush bg-transparent">
-                    <% room.occupants.forEach(occupant => { %>
-                        <% if(occupant._id.toString() !== user._id.toString()) { %>
-                            <li class="list-group-item bg-transparent text-white px-0 d-flex align-items-center gap-2 border-secondary">
-                                <img src="https://ui-avatars.com/api/?name=<%= occupant.name %>" class="avatar-sm">
-                                <span><%= occupant.name %></span>
-                            </li>
-                        <% } %>
-                    <% }) %>
-                    <% if(room.occupants.length === 1) { %>
-                        <li class="list-group-item bg-transparent text-muted small px-0 fst-italic">
-                            You are currently alone in this room.
-                        </li>
-                    <% } %>
-                </ul>
-
-                <button class="btn btn-outline-warning w-100 mt-3" data-bs-toggle="modal" data-bs-target="#changeRoomModal">
-                    Request Room Change
-                </button>
-
-            <% } else { %>
-                <div class="text-center py-4 text-muted">
-                    <i class="bi bi-exclamation-circle fs-1 d-block mb-2"></i>
-                    No Room Assigned Yet.<br>
-                    <small>Please contact Admin/Staff.</small>
-                </div>
-            <% } %>
+        <div class="col-md-8">
+            <div class="panel h-100 p-4">
+                <h5 class="text-white fw-bold mb-4 border-bottom border-secondary pb-2"><i class="bi bi-bell me-2"></i>Latest Notices</h5>
+                
+                <% if(notices && notices.length > 0) { %>
+                    <div class="d-flex flex-column gap-3">
+                        <% notices.forEach(n => { %>
+                            <div class="glass-card p-3 border border-secondary rounded-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-info m-0"><%= n.title %></h6>
+                                    <small class="text-muted"><%= new Date(n.createdAt).toLocaleDateString() %></small>
+                                </div>
+                                <p class="text-white-50 small mb-0"><%= n.content %></p>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-chat-square-quote fs-1 d-block mb-3"></i>
+                        No new announcements.
+                    </div>
+                <% } %>
+            </div>
         </div>
     </div>
 
+<% } %>
 
-    <div class="col-lg-8">
-        
-        <div class="panel mb-4">
-            <h5 class="mb-3"><i class="bi bi-pencil-square me-2"></i>Raise a Complaint</h5>
-            <form action="/student/complaint/add" method="POST">
-    <div class="row g-3">
+
+<% if (section === 'room') { %>
+    
+    <div class="row g-4 justify-content-center">
         <div class="col-md-6">
-            <label class="small text-muted">Category</label>
-            <select name="category" class="form-select bg-dark text-white border-secondary">
-                <option value="Electricity">Electricity</option>
-                <option value="Plumbing">Plumbing</option>
-                <option value="Furniture">Furniture</option>
-                <option value="WiFi">WiFi</option>
-                <option value="Cleaning">Cleaning</option>
-                <option value="Food">Food</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label class="small text-muted">Priority</label>
-            <select name="priority" class="form-select bg-dark text-white border-secondary">
-                <option value="Low">Low</option>
-                <option value="Medium" selected>Medium</option>
-                <option value="High">High</option>
-            </select>
-        </div>
-        <div class="col-12">
-            <input type="text" name="title" class="form-control bg-dark text-white border-secondary" placeholder="Issue Title (e.g. Fan not working)" required>
-        </div>
-        <div class="col-12">
-            <textarea name="description" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Describe the problem..." required></textarea>
-        </div>
-        <div class="col-12 text-end">
-            <button class="btn btn-primary px-4">Submit Complaint</button>
-        </div>
-    </div>
-</form>
+            <div class="panel p-5 text-center">
+                <h5 class="text-muted text-uppercase mb-4">My Room Assignment</h5>
+                
+                <% if(user.room) { %>
+                    <div class="display-1 fw-bold text-white mb-2"><%= room.roomNumber %></div>
+                    <span class="badge bg-primary fs-6 mb-4"><%= room.type %> Occupancy</span>
 
-        </div>
-
-        <div class="panel h-100">
-            <h5 class="mb-3 border-bottom border-secondary pb-2"><i class="bi bi-clock-history me-2"></i>Complaint History</h5>
-            
-            <% if(complaints.length > 0) { %>
-                <div class="table-responsive">
-                    <table class="table table-custom mb-0">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Issue</th>
-                                <th>Category</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% complaints.forEach(c => { %>
-                                <tr>
-                                    <td class="text-muted small"><%= new Date(c.createdAt).toLocaleDateString() %></td>
-                                    <td><%= c.title %></td>
-                                    <td><span class="badge bg-secondary"><%= c.category %></span></td>
-                                    <td>
-                                        <% if(c.status === 'resolved') { %>
-                                            <span class="badge bg-success">Resolved</span>
-                                        <% } else { %>
-                                            <span class="badge bg-danger">Pending</span>
-                                        <% } %>
-                                    </td>
-                                </tr>
+                    <div class="text-start bg-dark bg-opacity-50 p-4 rounded-3 border border-secondary mt-4">
+                        <h6 class="text-white border-bottom border-secondary pb-2 mb-3">Roommates</h6>
+                        <% if(roommates.length > 0) { %>
+                            <% roommates.forEach(mate => { %>
+                                <div class="d-flex align-items-center gap-3 mb-3 last-mb-0">
+                                    <div class="avatar-circle" style="width: 35px; height: 35px; font-size: 14px;"><%= mate.name.charAt(0) %></div>
+                                    <div>
+                                        <div class="text-white fw-bold"><%= mate.name %></div>
+                                        <div class="text-muted small"><%= mate.email %></div>
+                                    </div>
+                                </div>
                             <% }) %>
-                        </tbody>
-                    </table>
-                </div>
-            <% } else { %>
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-clipboard-check fs-1 d-block mb-2"></i>
-                    No past complaints found.
-                </div>
-            <% } %>
+                        <% } else { %>
+                            <div class="text-muted small fst-italic">You have no roommates yet.</div>
+                        <% } %>
+                    </div>
+
+                    <div class="mt-4">
+                        <% if(roomRequest) { %>
+                            <div class="alert alert-warning border-0 d-flex align-items-center justify-content-between">
+                                <span><i class="bi bi-clock me-2"></i>Change Request Pending</span>
+                                <form action="/student/request-room-change/cancel" method="POST">
+                                    <button class="btn btn-sm btn-outline-dark">Cancel</button>
+                                </form>
+                            </div>
+                        <% } else { %>
+                            <button class="btn btn-outline-warning w-100" data-bs-toggle="modal" data-bs-target="#changeRoomModal">
+                                Request Room Change
+                            </button>
+                        <% } %>
+                    </div>
+
+                <% } else { %>
+                    <div class="py-5">
+                        <i class="bi bi-exclamation-circle text-danger fs-1 mb-3 d-block"></i>
+                        <h4 class="text-white">No Room Assigned</h4>
+                        <p class="text-muted">Please contact the hostel admin or warden for allotment.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+<% } %>
+
+
+<% if (section === 'complaints') { %>
+    
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="panel p-4 h-100">
+                <h5 class="text-white fw-bold mb-4"><i class="bi bi-pencil-square me-2"></i>Report an Issue</h5>
+                <form action="/student/complaint/add" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Category</label>
+                        <select name="category" class="form-select bg-dark text-white border-secondary">
+                            <option value="Electricity">Electricity</option>
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Furniture">Furniture</option>
+                            <option value="WiFi">Internet/WiFi</option>
+                            <option value="Cleaning">Cleaning</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Subject</label>
+                        <input type="text" name="title" class="form-control bg-dark text-white border-secondary" placeholder="e.g. Fan not working" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Description</label>
+                        <textarea name="description" class="form-control bg-dark text-white border-secondary" rows="4" placeholder="Describe the issue..." required></textarea>
+                    </div>
+                    <button class="btn btn-danger w-100">Submit Complaint</button>
+                </form>
+            </div>
         </div>
 
+        <div class="col-lg-8">
+            <div class="panel p-4 h-100">
+                <h5 class="text-white fw-bold mb-4"><i class="bi bi-clock-history me-2"></i>My Complaints</h5>
+                
+                <% if(complaints.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Subject</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% complaints.forEach(c => { %>
+                                    <tr>
+                                        <td class="text-muted small"><%= new Date(c.createdAt).toLocaleDateString() %></td>
+                                        <td>
+                                            <div class="text-white fw-bold"><%= c.title %></div>
+                                            <div class="text-white-50 small"><%= c.category %></div>
+                                        </td>
+                                        <td>
+                                            <% if(c.status === 'resolved') { %>
+                                                <span class="badge bg-success-subtle text-success border border-success">Resolved</span>
+                                            <% } else if(c.status === 'in-progress') { %>
+                                                <span class="badge bg-warning-subtle text-warning border border-warning">In Progress</span>
+                                            <% } else { %>
+                                                <span class="badge bg-danger-subtle text-danger border border-danger">Pending</span>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-check-circle fs-1 d-block mb-2"></i>
+                        No complaints found.
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+<% } %>
+
+
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary"><h5 class="modal-title">Update Contact Info</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <form action="/users/profile/update" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3"><label class="form-label text-muted small">Phone Number</label><input type="text" name="phone" class="form-control" value="<%= user.phone %>" required></div>
+                    <div class="mb-3"><label class="form-label text-muted small">Home Address</label><textarea name="address" class="form-control" rows="2"><%= user.address %></textarea></div>
+                    <div class="mb-3"><label class="form-label text-muted small">Guardian Phone</label><input type="text" name="guardianPhone" class="form-control" value="<%= user.guardianPhone %>"></div>
+                </div>
+                <div class="modal-footer border-secondary"><button class="btn btn-primary w-100">Save Changes</button></div>
+            </form>
+        </div>
     </div>
 </div>
 
 <div class="modal fade" id="changeRoomModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-dark text-white border-secondary">
-            <div class="modal-header border-secondary">
-                <h5 class="modal-title">Request Room Change</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
+            <div class="modal-header border-secondary"><h5 class="modal-title">Request Room Change</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
             <form action="/student/request-room-change" method="POST">
                 <div class="modal-body">
-                    <% if(roomRequest) { %>
-                        <div class="alert alert-warning">
-                            <i class="bi bi-clock"></i> You already have a pending request.
-                        </div>
-                    <% } else { %>
-                        <p class="text-muted small">This request will be sent to the Admin for approval.</p>
-                        <textarea name="reason" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Reason for change..." required></textarea>
+                    <p class="text-muted small">Why do you want to change your room?</p>
+                    <textarea name="reason" class="form-control bg-dark text-white border-secondary mb-3" rows="3" required></textarea>
+                    
+                    <% if(typeof availableRooms !== 'undefined' && availableRooms.length > 0) { %>
+                        <label class="text-muted small mb-2">Preferred Room (Optional)</label>
+                        <select name="requestedRoomId" class="form-select bg-dark text-white border-secondary">
+                            <option value="">Any Available Room</option>
+                            <% availableRooms.forEach(r => { %>
+                                <option value="<%= r._id %>">Room <%= r.roomNumber %> (<%= r.type %>)</option>
+                            <% }) %>
+                        </select>
                     <% } %>
                 </div>
-                <div class="modal-footer border-secondary">
-                    <% if(!roomRequest) { %>
-                        <button class="btn btn-warning text-dark fw-bold">Send Request</button>
-                    <% } %>
-                </div>
+                <div class="modal-footer border-secondary"><button class="btn btn-warning w-100">Submit Request</button></div>
             </form>
         </div>
     </div>

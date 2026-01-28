@@ -1,0 +1,193 @@
+<div class="register-wrapper d-flex align-items-center justify-content-center">
+  
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-md-9">
+        
+        <div class="card glass-card border-0 rounded-4 overflow-hidden position-relative">
+            
+            <div class="glow-effect"></div>
+
+            <div class="card-body p-5 position-relative" style="z-index: 2;">
+                
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-white mb-1">Create Account</h2>
+                    <p class="text-muted small">Join the premium hostel community</p>
+                </div>
+
+                <%- include('./partials/messages') %>
+
+                <form action="/users/register" method="POST">
+                    
+                    <label class="section-label text-primary mb-3"><i class="bi bi-person me-2"></i>Personal Info</label>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="form-floating custom-floating">
+                                <input type="text" name="name" class="form-control" id="nameInput" placeholder="Name" required value="<%= typeof name != 'undefined' ? name : '' %>">
+                                <label for="nameInput">Full Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating custom-floating">
+                                <input type="email" name="email" class="form-control" id="emailInput" placeholder="Email" required value="<%= typeof email != 'undefined' ? email : '' %>">
+                                <label for="emailInput">Email Address</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating custom-floating">
+                                <input type="text" name="phone" class="form-control" id="phoneInput" placeholder="Phone" required value="<%= typeof phone != 'undefined' ? phone : '' %>">
+                                <label for="phoneInput">Mobile Number</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating custom-floating">
+                                <select name="gender" class="form-select" id="genderInput">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <label for="genderInput">Gender</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating custom-floating">
+                                        <input type="text" name="course" class="form-control" id="courseInput" placeholder="Course" value="<%= typeof course != 'undefined' ? course : '' %>">
+                                        <label for="courseInput">Course (e.g. B.Tech)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating custom-floating">
+                                        <input type="text" name="address" class="form-control" id="addrInput" placeholder="Address" value="<%= typeof address != 'undefined' ? address : '' %>">
+                                        <label for="addrInput">City / State</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="section-label text-info mb-3"><i class="bi bi-people me-2"></i>Guardian Info</label>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="form-floating custom-floating">
+                                <input type="text" name="guardianName" class="form-control" id="gName" placeholder="Guardian Name" value="<%= typeof guardianName != 'undefined' ? guardianName : '' %>">
+                                <label for="gName">Guardian Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating custom-floating">
+                                <input type="text" name="guardianPhone" class="form-control" id="gPhone" placeholder="Guardian Phone" value="<%= typeof guardianPhone != 'undefined' ? guardianPhone : '' %>">
+                                <label for="gPhone">Guardian Phone</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="section-label text-warning mb-3"><i class="bi bi-lock me-2"></i>Security</label>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="form-floating custom-floating">
+                                <input type="password" name="password" class="form-control" id="pass1" placeholder="Password" required>
+                                <label for="pass1">Password</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating custom-floating">
+                                <input type="password" name="confirm_password" class="form-control" id="pass2" placeholder="Confirm" required>
+                                <label for="pass2">Confirm Password</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-lg hover-glow">
+                        Register Account
+                    </button>
+
+                </form>
+
+                <div class="text-center mt-4">
+                    <small class="text-muted">Already have an account? <a href="/users/login" class="text-white fw-bold text-decoration-none">Login</a></small>
+                </div>
+
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+    /* 1. Wrapper to fix Navbar overlap & Center content */
+    .register-wrapper {
+        min-height: 100vh;
+        padding-top: 100px; /* Navbar se doori */
+        padding-bottom: 50px;
+        background: radial-gradient(circle at top right, #1e293b, #0f172a);
+    }
+
+    /* 2. Glassmorphism Card */
+    .glass-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 3. Custom Form Inputs (Dark Theme) */
+    .custom-floating .form-control {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 10px;
+    }
+    
+    .custom-floating .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+        background: rgba(15, 23, 42, 1) !important;
+    }
+
+    .custom-floating label {
+        color: #94a3b8;
+    }
+
+    .custom-floating .form-select {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 10px;
+    }
+
+    /* 4. Section Labels */
+    .section-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: block;
+    }
+
+    /* 5. Button Glow */
+    .hover-glow {
+        transition: all 0.3s ease;
+        background: linear-gradient(45deg, #0d6efd, #3b82f6);
+        border: none;
+    }
+    .hover-glow:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(13, 110, 253, 0.4);
+    }
+
+    /* 6. Background Ambient Glow */
+    .glow-effect {
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        width: 150px;
+        height: 150px;
+        background: rgba(13, 110, 253, 0.3);
+        filter: blur(80px);
+        border-radius: 50%;
+        z-index: 1;
+    }
+</style>

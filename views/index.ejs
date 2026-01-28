@@ -1,78 +1,190 @@
-<section class="hero-section position-relative overflow-hidden">
-    
-    <div id="heroCarousel" class="carousel slide carousel-fade h-100" data-bs-ride="carousel" data-bs-interval="3000">
-      <div class="carousel-inner h-100">
-        
-        <% if(typeof galleryImages !== 'undefined' && galleryImages.length > 0) { %>
-          <% galleryImages.forEach((img, index) => { %>
-            <div class="carousel-item h-100 <%= index === 0 ? 'active' : '' %>">
-              <img src="<%= img.imageUrl %>" class="d-block w-100 h-100" alt="Slide">
-            </div>
-          <% }) %>
-        <% } else { %>
-          <div class="carousel-item h-100 active">
-            <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1920" class="d-block w-100 h-100" alt="Hostel">
-          </div>
-          <div class="carousel-item h-100">
-            <img src="https://images.unsplash.com/photo-1596276020587-8044fe049813?q=80&w=1920" class="d-block w-100 h-100" alt="Campus">
-          </div>
-        <% } %>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-      </div>
+<section id="home" class="hero-section d-flex align-items-center justify-content-center text-center">
+    
+    <div class="hero-bg">
+        <div class="hero-overlay"></div>
+        <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1920" class="hero-media animate-zoom" alt="Hostel Background">
     </div>
 
-    <div class="position-absolute top-50 start-50 translate-middle text-center text-white w-75 hero-content" style="z-index: 10;">
-        <h1 class="display-3 fw-bold mb-3">Welcome to Next-Gen Hostel</h1>
-        <p class="lead mb-4 text-light">Experience world-class facilities with premium security and comfort.</p>
+    <div class="container hero-content position-relative z-2" data-aos="fade-up" data-aos-duration="1200">
+        <div class="d-inline-block mb-4">
+            <span class="badge-premium">🚀 Admissions Open 2026</span>
+        </div>
+
+        <h1 class="display-1 fw-bolder mb-3 hero-title text-white">
+            Next-Gen <span class="text-gradient">Living.</span>
+        </h1>
+        
+        <p class="hero-subtitle mb-5 mx-auto text-white-50">
+            Experience world-class facilities, premium security, and a vibrant community designed for scholars.
+        </p>
+
         <div class="d-flex justify-content-center gap-3">
-            <a href="/users/login" class="btn btn-primary btn-lg px-5 rounded-pill">Student Login</a>
-            <a href="/setup-admin" class="btn btn-outline-light btn-lg px-5 rounded-pill">Admin Setup</a>
+            <a href="/users/login" class="btn btn-primary-glow btn-lg text-decoration-none">
+                Student Login <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+            <a href="/users/register" class="btn btn-outline-glow btn-lg text-decoration-none">
+                Join Community
+            </a>
         </div>
     </div>
 
-    <div class="position-absolute bottom-0 start-50 translate-middle-x mb-4 text-white animate-bounce">
-        <i class="bi bi-chevron-down fs-2"></i>
+    <div class="scroll-indicator animate-bounce">
+        <a href="#about" class="text-white text-decoration-none">
+            <i class="bi bi-mouse fs-2"></i>
+            <span class="d-block small text-white-50 mt-1" style="font-size: 10px; letter-spacing: 1px;">SCROLL DOWN</span>
+        </a>
+    </div>
+
+</section>
+
+<section class="stats-section container position-relative z-3">
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="glass-card stat-card p-4 d-flex align-items-center justify-content-between">
+                <div class="text-start">
+                    <h2 class="fw-bold text-white m-0 counter">500+</h2>
+                    <small class="text-white-50">Happy Students</small>
+                </div>
+                <div class="icon-box-glow bg-primary">
+                    <i class="bi bi-people-fill fs-3 text-white"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="glass-card stat-card p-4 d-flex align-items-center justify-content-between">
+                <div class="text-start">
+                    <h2 class="fw-bold text-white m-0 counter">150+</h2>
+                    <small class="text-white-50">Modern Rooms</small>
+                </div>
+                <div class="icon-box-glow bg-success">
+                    <i class="bi bi-building-fill fs-3 text-white"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="glass-card stat-card p-4 d-flex align-items-center justify-content-between">
+                <div class="text-start">
+                    <h2 class="fw-bold text-white m-0 counter">4.8</h2>
+                    <small class="text-white-50">Top Rating</small>
+                </div>
+                <div class="icon-box-glow bg-warning">
+                    <i class="bi bi-star-fill fs-3 text-white"></i>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<section id="features" class="py-5 bg-dark features-section">
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <h6 class="text-primary fw-bold text-uppercase">Why Choose Us</h6>
-            <h2 class="text-white fw-bold display-5">Premium Facilities</h2>
+<section id="about" class="section-padding position-relative overflow-hidden">
+    <div class="ambient-glow right"></div>
+
+    <div class="container">
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h6 class="text-primary fw-bold text-uppercase ls-2">Why Choose Us</h6>
+                <h2 class="display-4 fw-bold text-white">Designed for <br> <span class="text-gradient">Excellence</span></h2>
+            </div>
+            <div class="col-lg-6 text-white-50" data-aos="fade-left">
+                We provide more than just accommodation. We provide an ecosystem where students can thrive, learn, and grow together in a secure environment.
+            </div>
+        </div>
+
+        <div id="features" class="row g-4">
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                <div class="glass-card feature-card p-5 h-100">
+                    <div class="feature-icon mb-4 text-primary">
+                        <i class="bi bi-wifi fs-1"></i>
+                    </div>
+                    <h4 class="text-white fw-bold">Ultra-Fast WiFi</h4>
+                    <p class="text-white-50">Gigabit speed internet access throughout the campus for uninterrupted studies.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                <div class="glass-card feature-card p-5 h-100">
+                    <div class="feature-icon mb-4 text-success">
+                        <i class="bi bi-shield-check fs-1"></i>
+                    </div>
+                    <h4 class="text-white fw-bold">24/7 Security</h4>
+                    <p class="text-white-50">Biometric entry, CCTV surveillance, and round-the-clock guards for your safety.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
+                <div class="glass-card feature-card p-5 h-100">
+                    <div class="feature-icon mb-4 text-warning">
+                        <i class="bi bi-cup-hot fs-1"></i>
+                    </div>
+                    <h4 class="text-white fw-bold">Healthy Dining</h4>
+                    <p class="text-white-50">Nutritious, hygienic, and delicious meals served 4 times a day.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="gallery" class="section-padding bg-darker position-relative">
+    <div class="ambient-glow left"></div>
+    
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-4 fw-bold text-white">Campus <span class="text-gradient">Life</span></h2>
+            <p class="text-white-50">A glimpse into your future home.</p>
         </div>
 
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="p-4 rounded-4 text-center h-100 hover-effect">
-                    <div class="icon-box">
-                        <i class="bi bi-wifi fs-1"></i>
+            <% if(typeof galleryImages !== 'undefined' && galleryImages.length > 0) { %>
+                <% galleryImages.forEach((img, index) => { %>
+                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+                        <div class="gallery-card rounded-4 overflow-hidden shadow-lg">
+                            <img src="<%= img.imageUrl %>" class="gallery-img">
+                            <div class="gallery-overlay">
+                                <h5 class="text-white fw-bold m-0"><%= img.title || 'Campus Moment' %></h5>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="text-white fw-bold">High-Speed WiFi</h4>
-                    <p class="text-muted">24/7 unlimited high-speed internet access for your studies and entertainment.</p>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="p-4 rounded-4 text-center h-100 hover-effect">
-                    <div class="icon-box">
-                        <i class="bi bi-shield-lock fs-1"></i>
-                    </div>
-                    <h4 class="text-white fw-bold">Secure Campus</h4>
-                    <p class="text-muted">CCTV surveillance and 24/7 professional security staff for your complete safety.</p>
-                </div>
-            </div>
+                <% }) %>
+            <% } else { %>
+                <div class="col-md-4" data-aos="fade-up"><div class="gallery-card rounded-4 overflow-hidden"><img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600" class="gallery-img"><div class="gallery-overlay"><h5 class="text-white">Library</h5></div></div></div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100"><div class="gallery-card rounded-4 overflow-hidden"><img src="https://images.unsplash.com/photo-1596276020587-8044fe049813?q=80&w=600" class="gallery-img"><div class="gallery-overlay"><h5 class="text-white">Sports</h5></div></div></div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200"><div class="gallery-card rounded-4 overflow-hidden"><img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=600" class="gallery-img"><div class="gallery-overlay"><h5 class="text-white">Hostel</h5></div></div></div>
+            <% } %>
+        </div>
+    </div>
+</section>
 
-            <div class="col-md-4">
-                <div class="p-4 rounded-4 text-center h-100 hover-effect">
-                    <div class="icon-box">
-                        <i class="bi bi-cup-hot fs-1"></i>
+<section id="contact" class="section-padding">
+    <div class="container">
+        <div class="glass-card p-0 overflow-hidden rounded-5">
+            <div class="row g-0">
+                <div class="col-lg-4 p-5 d-flex flex-column justify-content-center bg-dark-glass">
+                    <h3 class="text-white fw-bold mb-4">Visit Us</h3>
+                    
+                    <div class="contact-item mb-4">
+                        <div class="icon-small bg-primary"><i class="bi bi-geo-alt-fill"></i></div>
+                        <div><small class="text-white-50">Address</small><div class="text-white fw-bold">Knowledge Park, Noida</div></div>
                     </div>
-                    <h4 class="text-white fw-bold">Hygienic Food</h4>
-                    <p class="text-muted">Healthy and delicious meals served 4 times a day in our clean and modern mess.</p>
+                    <div class="contact-item mb-4">
+                        <div class="icon-small bg-success"><i class="bi bi-telephone-fill"></i></div>
+                        <div><small class="text-white-50">Phone</small><div class="text-white fw-bold">+91 98765 43210</div></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon-small bg-info"><i class="bi bi-envelope-fill"></i></div>
+                        <div><small class="text-white-50">Email</small><div class="text-white fw-bold">admin@hms.com</div></div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.937746594279!2d77.38!3d28.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDM2JzAwLjAiTiA3N8KwMjInNDguMCJF!5e0!3m2!1sen!2sin!4v1635760000000!5m2!1sen!2sin" class="w-100 h-100 dark-map" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+      once: true,
+      offset: 100
+  });
+</script>

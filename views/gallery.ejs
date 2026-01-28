@@ -1,0 +1,66 @@
+<section class="position-relative d-flex align-items-center justify-content-center" style="height: 50vh; overflow: hidden;">
+    <div class="hero-bg">
+        <div class="hero-overlay"></div>
+        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1920" class="hero-media" alt="Gallery Header">
+    </div>
+    
+    <div class="container position-relative z-2 text-center" data-aos="fade-up">
+        <span class="badge-premium mb-3">Campus Memories</span>
+        <h1 class="display-3 fw-bold text-white">Our <span class="text-gradient">Gallery</span></h1>
+        <p class="text-white-50 lead mx-auto" style="max-width: 600px;">
+            Explore the vibrant life at HMS. From events to hostel facilities, see it all here.
+        </p>
+    </div>
+</section>
+
+
+<section class="section-padding position-relative bg-darker">
+    <div class="ambient-glow left"></div>
+    <div class="ambient-glow right" style="top: 50%;"></div>
+
+    <div class="container">
+        
+        <div class="row g-4">
+            <% if(typeof galleryImages !== 'undefined' && galleryImages.length > 0) { %>
+                
+                <% galleryImages.forEach((img, index) => { %>
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="<%= (index % 3) * 100 %>">
+                        <div class="gallery-card rounded-4 overflow-hidden shadow-lg border border-secondary border-opacity-25">
+                            <img src="<%= img.imageUrl %>" class="gallery-img w-100 h-100 object-fit-cover">
+                            
+                            <div class="gallery-overlay d-flex flex-column justify-content-end p-4">
+                                <h5 class="text-white fw-bold m-0"><%= img.title || 'Campus Moment' %></h5>
+                                <% if(img.description) { %>
+                                    <p class="text-white-50 small mt-1 mb-0 text-truncate"><%= img.description %></p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+
+            <% } else { %>
+                
+                <div class="col-12 text-center py-5">
+                    <div class="glass-card d-inline-block p-5 rounded-4">
+                        <i class="bi bi-images fs-1 text-muted mb-3 d-block"></i>
+                        <h3 class="text-white fw-bold">No Images Yet</h3>
+                        <p class="text-white-50">Admin hasn't uploaded any memories yet.</p>
+                        <a href="/" class="btn btn-primary-glow mt-3">Back to Home</a>
+                    </div>
+                </div>
+
+            <% } %>
+        </div>
+
+        <div class="text-center mt-5 pt-4">
+            <p class="text-white-50 mb-4">Want to be part of these moments?</p>
+            <a href="/users/register" class="btn btn-outline-glow px-5">Join Our Hostel</a>
+        </div>
+
+    </div>
+</section>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({ once: true, offset: 100 });
+</script>

@@ -1,210 +1,479 @@
-<div class="row g-4 mb-4">
-    <div class="col-md-3">
-        <div class="panel stat-card">
-            <div>
-                <h6 class="text-muted text-uppercase small">Total Students</h6>
-                <h2 class="m-0 fw-bold"><%= stats.totalStudents %></h2>
-            </div>
-            <div class="stat-icon icon-primary"><i class="bi bi-people"></i></div>
-        </div>
-    </div>
+<% if (section === 'dashboard') { %>
 
+  <div class="row g-4 mb-4">
     <div class="col-md-3">
-        <div class="panel stat-card">
-            <div>
-                <h6 class="text-muted text-uppercase small">Present Today</h6>
-                <h2 class="m-0 fw-bold"><%= stats.presentStudents %></h2>
-            </div>
-            <div class="stat-icon icon-success"><i class="bi bi-check-circle"></i></div>
-        </div>
+      <div class="stats-card">
+        <div class="stats-icon bg-icon-primary"><i class="bi bi-people-fill"></i></div>
+        <div class="stats-number"><%= stats.totalStudents %></div>
+        <div class="stats-label">Total Active Students</div>
+      </div>
     </div>
-
     <div class="col-md-3">
-        <div class="panel stat-card">
-            <div>
-                <h6 class="text-muted text-uppercase small">On Leave</h6>
-                <h2 class="m-0 fw-bold"><%= stats.onHoliday %></h2>
-            </div>
-            <div class="stat-icon icon-warning"><i class="bi bi-airplane"></i></div>
-        </div>
+      <div class="stats-card">
+        <div class="stats-icon bg-icon-success"><i class="bi bi-check-circle-fill"></i></div>
+        <div class="stats-number"><%= stats.presentStudents %></div>
+        <div class="stats-label">Present in Hostel</div>
+      </div>
     </div>
-
     <div class="col-md-3">
-        <div class="panel stat-card">
-            <div>
-                <h6 class="text-muted text-uppercase small">Occupancy</h6>
-                <h2 class="m-0 fw-bold"><%= stats.occupancyRate %>%</h2>
-            </div>
-            <div class="stat-icon icon-danger"><i class="bi bi-building"></i></div>
-        </div>
+      <div class="stats-card">
+        <div class="stats-icon bg-icon-warning"><i class="bi bi-airplane-fill"></i></div>
+        <div class="stats-number"><%= stats.onLeave %></div>
+        <div class="stats-label">On Leave</div>
+      </div>
     </div>
-</div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="stats-icon bg-icon-danger"><i class="bi bi-signpost-split-fill"></i></div>
+        <div class="stats-number"><%= stats.outOfHostel %></div>
+        <div class="stats-label">Gate Pass Out</div>
+      </div>
+    </div>
+  </div>
 
-<div class="row g-4">
+  <div class="row g-4">
     
     <div class="col-lg-8">
-        <div class="panel h-100">
-          
-            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-secondary pb-2">
-    <h5 class="m-0"><i class="bi bi-calendar-check me-2"></i>Attendance & Management</h5>
-
-    <div class="d-flex gap-2">
-        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addStudentModal">
-            <i class="bi bi-person-plus"></i> New Student
-        </button>
-
-        <input type="text" id="studentSearch" class="form-control bg-dark text-white border-secondary py-1" style="width: 180px; font-size: 0.9rem;" placeholder="Search...">
-    </div>
-</div>
-
-
-            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
-                <table class="table table-custom mb-0 align-middle">
-                    <thead>
-                        <tr>
-                            <th>Student Name</th>
-                            <th>Room</th>
-                            <th>Status</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentTableBody">
-                        <% if(students.length > 0) { %>
-                            <% students.forEach(student => { %>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <img src="https://ui-avatars.com/api/?name=<%= student.name %>&background=random" class="avatar-sm">
-                                            <div>
-                                                <div class="fw-bold"><%= student.name %></div>
-                                                <div class="small text-muted"><%= student.rollNumber %></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <% if(student.room) { %>
-                                            <span class="badge bg-success"><%= student.room.roomNumber %></span>
-                                        <% } else { %>
-                                            <span class="badge bg-danger">Unassigned</span>
-                                        <% } %>
-                                    </td>
-                                    <td>
-                                        <% if(student.status === 'present') { %>
-                                            <span class="text-success small fw-bold"><i class="bi bi-circle-fill" style="font-size: 8px;"></i> Present</span>
-                                        <% } else { %>
-                                            <span class="text-warning small fw-bold"><i class="bi bi-circle-fill" style="font-size: 8px;"></i> On Holiday</span>
-                                        <% } %>
-                                    </td>
-                                    <td class="text-end">
-                                        <form action="/staff/student/<%= student._id %>/status" method="POST" class="d-inline">
-                                            <button class="btn btn-sm <%= student.status === 'present' ? 'btn-outline-warning' : 'btn-outline-success' %>" title="Toggle Attendance">
-                                                <i class="bi <%= student.status === 'present' ? 'bi-airplane' : 'bi-check-lg' %>"></i>
-                                            </button>
-                                        </form>
-
-                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#assignModal<%= student._id %>" title="Assign Room">
-                                            <i class="bi bi-house-door"></i>
-                                        </button>
-                                        
-                                        <% if(student.room) { %>
-                                            <form action="/staff/room/remove" method="POST" class="d-inline" onsubmit="return confirm('Remove student from room?')">
-                                                <input type="hidden" name="studentId" value="<%= student._id %>">
-                                                <input type="hidden" name="roomId" value="<%= student.room._id %>">
-                                                <button class="btn btn-sm btn-outline-danger" title="Vacate Room"><i class="bi bi-box-arrow-right"></i></button>
-                                            </form>
-                                        <% } %>
-                                    </td>
-                                </tr>
-
-                                <div class="modal fade" id="assignModal<%= student._id %>" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content bg-dark text-white border-secondary">
-                                            <div class="modal-header border-secondary">
-                                                <h5 class="modal-title">Assign Room to <%= student.name %></h5>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <form action="/staff/room/assign" method="POST">
-                                                <div class="modal-body">
-                                                    <input type="hidden" name="studentId" value="<%= student._id %>">
-                                                    <label class="mb-2">Select Available Room:</label>
-                                                    <select name="roomId" class="form-select bg-dark text-white border-secondary">
-                                                        <% rooms.forEach(r => { %>
-                                                            <% const isFull = r.occupants.length >= r.capacity %>
-                                                            <option value="<%= r._id %>" <%= isFull ? 'disabled' : '' %>>
-                                                                Room <%= r.roomNumber %> (<%= r.occupants.length %>/<%= r.capacity %>) <%= isFull ? '- FULL' : '' %>
-                                                            </option>
-                                                        <% }) %>
-                                                    </select>
-                                                </div>
-                                                <div class="modal-footer border-secondary">
-                                                    <button class="btn btn-primary">Assign Room</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            <% }) %>
-                        <% } else { %>
-                            <tr><td colspan="4" class="text-center py-4 text-muted">No students found.</td></tr>
-                        <% } %>
-                    </tbody>
-                </table>
+      <div class="panel h-100 shadow-sm p-0 d-flex flex-column">
+        
+        <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center">
+            <h5 class="m-0 text-white fw-bold"><i class="bi bi-calendar-check me-2"></i>Attendance Manager</h5>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary-glow btn-sm" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                    <i class="bi bi-person-plus-fill me-2"></i> New
+                </button>
+                <input type="text" id="studentSearch" class="form-control form-control-sm bg-dark text-white border-secondary" style="width: 200px;" placeholder="Search Student...">
             </div>
         </div>
+
+        <div class="table-responsive flex-grow-1" style="max-height: 600px; overflow-y: auto;">
+          <table class="custom-table mb-0">
+            <thead>
+              <tr>
+                <th class="ps-4">Student</th>
+                <th>Room</th>
+                <th>Gate Status</th>
+                <th>Attendance</th>
+                <th class="text-end pe-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentTableBody">
+              <% if(students.length > 0) { %>
+                <% students.forEach(student => { %>
+                  <tr>
+                    <td class="ps-4">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="avatar-circle" style="width: 35px; height: 35px; font-size: 12px;">
+                            <%= student.name.charAt(0) %>
+                        </div>
+                        <div>
+                          <div class="fw-bold text-white"><%= student.name %></div>
+                          <div class="small text-muted"><%= student.rollNumber %></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <% if(student.room) { %>
+                        <span class="badge bg-success-subtle">Room <%= student.room.roomNumber %></span>
+                      <% } else { %>
+                        <span class="badge bg-danger-subtle">Unassigned</span>
+                      <% } %>
+                    </td>
+                    <td>
+                        <% if(student.isOut) { %>
+                            <span class="badge-status badge-danger animate-pulse">OUT</span>
+                        <% } else { %>
+                            <span class="badge-status badge-success">IN</span>
+                        <% } %>
+                    </td>
+                    <td>
+                      <% if(student.status === 'present') { %>
+                        <span class="text-success small fw-bold"><i class="bi bi-dot me-1"></i>Present</span>
+                      <% } else { %>
+                        <span class="text-warning small fw-bold"><i class="bi bi-dot me-1"></i>On Leave</span>
+                      <% } %>
+                    </td>
+                    <td class="text-end pe-4">
+                        <form action="/staff/student/<%= student._id %>/status" method="POST" class="d-inline">
+                            <button class="btn btn-sm <%= student.status === 'present' ? 'btn-outline-warning' : 'btn-outline-success' %> rounded-circle" title="Mark Present/Leave">
+                                <i class="bi <%= student.status === 'present' ? 'bi-airplane' : 'bi-check-lg' %>"></i>
+                            </button>
+                        </form>
+
+                        <button class="btn btn-sm btn-outline-primary rounded-circle mx-1" data-bs-toggle="modal" data-bs-target="#assignModal<%= student._id %>" title="Assign Room">
+                            <i class="bi bi-house-door"></i>
+                        </button>
+
+                        <% if(student.room) { %>
+                            <form action="/staff/room/remove" method="POST" class="d-inline" onsubmit="return confirm('Remove student from room?')">
+                                <input type="hidden" name="studentId" value="<%= student._id %>">
+                                <input type="hidden" name="roomId" value="<%= student.room._id %>">
+                                <button class="btn btn-sm btn-outline-danger rounded-circle" title="Vacate Room"><i class="bi bi-box-arrow-right"></i></button>
+                            </form>
+                        <% } %>
+                    </td>
+                  </tr>
+
+                  <div class="modal fade" id="assignModal<%= student._id %>" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content" style="background-color: #0f172a; border: 1px solid rgba(255,255,255,0.1);">
+                        <div class="modal-header border-secondary">
+                            <h5 class="modal-title">Assign Room: <%= student.name %></h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form action="/staff/room/assign" method="POST">
+                          <div class="modal-body">
+                            <input type="hidden" name="studentId" value="<%= student._id %>">
+                            <label class="mb-2 text-muted">Select Available Room:</label>
+                            <select name="roomId" class="form-select">
+                              <% rooms.forEach(r => { %>
+                                <% const isFull = r.occupants.length >= r.capacity %>
+                                <option value="<%= r._id %>" <%= isFull ? 'disabled' : '' %>>
+                                  Room <%= r.roomNumber %> (<%= r.occupants.length %>/<%= r.capacity %>) <%= isFull ? '- FULL' : '' %>
+                                </option>
+                              <% }) %>
+                            </select>
+                          </div>
+                          <div class="modal-footer border-secondary"><button class="btn btn-primary w-100">Confirm Assignment</button></div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+                <% }) %>
+              <% } else { %>
+                <tr><td colspan="5" class="text-center py-5 text-muted">No students found. Add one to start.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <div class="col-lg-4">
-    <div class="panel h-100">
-        <h5 class="mb-3 border-bottom border-secondary pb-2">
-            <i class="bi bi-exclamation-circle me-2"></i>Pending Complaints
-        </h5>
-        
+      
+      <div class="panel p-4 mb-4">
+        <h5 class="text-white fw-bold mb-3 border-bottom border-secondary pb-2">⚡ Quick Actions</h5>
+        <div class="d-grid gap-3">
+            <a href="/staff/dashboard?section=gate" class="btn btn-outline-info text-start p-3 rounded-3">
+                <i class="bi bi-door-open me-2 fs-5"></i> Open Gate Register
+            </a>
+            
+            <a href="/staff/dashboard?section=requests" class="btn btn-outline-warning text-start p-3 rounded-3 position-relative">
+                <i class="bi bi-arrow-left-right me-2 fs-5"></i> Room Change Requests
+                <% if(stats.pendingRequests > 0) { %>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <%= stats.pendingRequests %>
+                    </span>
+                <% } %>
+            </a>
+
+            <button class="btn btn-outline-light text-start p-3 rounded-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                <i class="bi bi-gear me-2 fs-5"></i> My Profile Settings
+            </button>
+        </div>
+      </div>
+
+      <div class="panel p-4 h-100">
+        <h5 class="text-white fw-bold mb-3 border-bottom border-secondary pb-2"><i class="bi bi-exclamation-circle me-2"></i>Task List</h5>
         <% if(complaints.length > 0) { %>
-            <div class="d-flex flex-column gap-2">
-                <% complaints.forEach(c => { %>
-                    
-                    <div class="p-3 rounded border border-secondary bg-dark mb-3">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h6 class="fw-bold m-0 text-white"><%= c.title %></h6>
-                            <span class="badge <%= c.priority === 'High' ? 'bg-danger' : 
-                                                 c.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info' %>">
-                                <%= c.priority %>
-                            </span>
+          <div class="d-flex flex-column gap-3" style="max-height: 400px; overflow-y: auto;">
+            <% complaints.forEach(c => { %>
+              <div class="glass-card p-3 border border-secondary rounded-3 position-relative">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="fw-bold m-0 text-white"><%= c.title %></h6>
+                  <span class="badge <%= c.priority === 'High' ? 'bg-danger' : 'bg-info' %>"><%= c.priority %></span>
+                </div>
+                <p class="small text-muted mb-2">
+                    <i class="bi bi-geo-alt me-1"></i>
+                    Room <%= c.student && c.student.room ? c.student.room.roomNumber : 'N/A' %>
+                </p>
+                <div class="d-flex gap-2">
+                  <% if(c.status === 'pending') { %>
+                      <form action="/staff/complaint/<%= c._id %>/update" method="POST" class="flex-grow-1">
+                        <input type="hidden" name="status" value="in-progress">
+                        <button class="btn btn-sm btn-outline-warning w-100">Start Work</button>
+                      </form>
+                  <% } %>
+                  <form action="/staff/complaint/<%= c._id %>/update" method="POST" class="flex-grow-1">
+                    <input type="hidden" name="status" value="resolved">
+                    <button class="btn btn-sm btn-success w-100">Mark Done</button>
+                  </form>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <div class="text-center py-5 text-muted">
+              <i class="bi bi-check2-all fs-1 text-success mb-2"></i>
+              <p>All clean! No pending issues.</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+<% } %>
+
+
+<% if (section === 'requests') { %>
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="fw-bold m-0 text-white">Room Change Requests</h3>
+      <a href="/staff/dashboard" class="btn btn-outline-light btn-sm rounded-pill px-4"><i class="bi bi-arrow-left me-1"></i> Back</a>
+  </div>
+
+  <div class="panel p-0 overflow-hidden">
+      <div class="table-responsive">
+          <table class="custom-table mb-0">
+              <thead>
+                  <tr>
+                      <th class="ps-4">Student</th>
+                      <th>Current Room</th>
+                      <th>Reason</th>
+                      <th class="text-end pe-4">Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <% if(roomRequests && roomRequests.length > 0) { %>
+                      <% roomRequests.forEach(req => { %>
+                          <tr>
+                              <td class="ps-4">
+                                  <div class="d-flex align-items-center gap-3">
+                                      <div class="avatar-circle">
+                                          <%= req.student.name.charAt(0) %>
+                                      </div>
+                                      <div>
+                                          <div class="fw-bold text-white"><%= req.student.name %></div>
+                                          <div class="small text-muted"><%= req.student.rollNumber %></div>
+                                      </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <span class="badge bg-secondary">Room <%= req.currentRoom ? req.currentRoom.roomNumber : 'N/A' %></span>
+                              </td>
+                              <td class="text-muted"><%= req.reason %></td>
+                              <td class="text-end pe-4">
+                                  <button class="btn btn-sm btn-success rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#approveReqModal<%= req._id %>">
+                                      Approve & Assign
+                                  </button>
+                                  <form action="/staff/request/<%= req._id %>/reject" method="POST" class="d-inline">
+                                      <button class="btn btn-sm btn-outline-danger rounded-circle"><i class="bi bi-x-lg"></i></button>
+                                  </form>
+                              </td>
+                          </tr>
+
+                          <div class="modal fade" id="approveReqModal<%= req._id %>" tabindex="-1">
+                              <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content" style="background-color: #0f172a; border: 1px solid rgba(255,255,255,0.1);">
+                                      <div class="modal-header border-secondary">
+                                          <h5 class="modal-title">Approve: <%= req.student.name %></h5>
+                                          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                      </div>
+                                      <form action="/staff/request/<%= req._id %>/approve" method="POST">
+                                          <div class="modal-body">
+                                              <p class="text-muted small">Current Room: <%= req.currentRoom ? req.currentRoom.roomNumber : 'N/A' %></p>
+                                              <label class="mb-2 text-white">Select New Room:</label>
+                                              <select name="targetRoomId" class="form-select">
+                                                  <% rooms.forEach(r => { %>
+                                                      <% const isFull = r.occupants.length >= r.capacity %>
+                                                      <option value="<%= r._id %>" <%= isFull ? 'disabled' : '' %>>
+                                                          Room <%= r.roomNumber %> (<%= r.occupants.length %>/<%= r.capacity %>)
+                                                      </option>
+                                                  <% }) %>
+                                              </select>
+                                          </div>
+                                          <div class="modal-footer border-secondary">
+                                              <button class="btn btn-success w-100">Confirm Change</button>
+                                          </div>
+                                      </form>
+                                  </div>
+                              </div>
+                          </div>
+                      <% }) %>
+                  <% } else { %>
+                      <tr><td colspan="4" class="text-center py-5 text-muted">No pending requests.</td></tr>
+                  <% } %>
+              </tbody>
+          </table>
+      </div>
+  </div>
+
+<% } %>
+
+
+<% if (section === 'gate') { %>
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="fw-bold m-0 text-white"><i class="bi bi-door-open me-2"></i>Gate Entry Tracker</h3>
+      <a href="/staff/dashboard" class="btn btn-outline-light btn-sm rounded-pill px-4"><i class="bi bi-arrow-left me-1"></i> Back</a>
+  </div>
+
+  <div class="panel p-3 mb-4 d-flex gap-2 align-items-center">
+      <i class="bi bi-search text-muted ms-2"></i>
+      <form action="/staff/dashboard" method="GET" class="d-flex gap-2 flex-grow-1">
+          <input type="hidden" name="section" value="gate">
+          <input type="text" name="search" class="form-control border-0 bg-transparent text-white" placeholder="Search Student Name or Roll No..." value="<%= typeof searchQuery != 'undefined' ? searchQuery : '' %>">
+          <button class="btn btn-primary rounded-pill px-4">Search</button>
+      </form>
+  </div>
+
+  <div class="row g-4">
+    <% if(students.length > 0) { %>
+        <% students.forEach(student => { %>
+          <div class="col-md-6 col-lg-4">
+            <div class="panel h-100 p-4 border-start border-4 <%= student.isOut ? 'border-danger' : 'border-success' %> position-relative">
+                
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="avatar-circle bg-dark border border-secondary" style="width:45px; height:45px; font-size:16px;">
+                            <%= student.name.charAt(0) %>
                         </div>
-                        
-                        <p class="small text-muted mb-1">Category: <b class="text-light"><%= c.category %></b></p>
-                        <p class="small text-muted mb-3"><%= c.description %></p>
-                        
-                        <div class="d-flex gap-2">
-                            <form action="/staff/complaint/<%= c._id %>/update" method="POST" class="flex-grow-1">
-                                <input type="hidden" name="status" value="in-progress">
-                                <button class="btn btn-sm btn-outline-warning w-100">In Progress</button>
-                            </form>
-                            <form action="/staff/complaint/<%= c._id %>/update" method="POST" class="flex-grow-1">
-                                <input type="hidden" name="status" value="resolved">
-                                <button class="btn btn-sm btn-success w-100">Resolve</button>
-                            </form>
+                        <div>
+                            <h6 class="m-0 fw-bold text-white"><%= student.name %></h6>
+                            <small class="text-muted">Roll: <%= student.rollNumber %></small>
                         </div>
                     </div>
-                    <% }) %>
+                    <span class="badge <%= student.isOut ? 'bg-danger animate-pulse' : 'bg-success' %>">
+                        <%= student.isOut ? 'OUTSIDE' : 'INSIDE' %>
+                    </span>
+                </div>
+
+                <hr class="border-secondary my-3 opacity-25">
+
+                <% if(student.isOut) { %>
+                    <div class="d-flex justify-content-between align-items-center mb-3 bg-danger bg-opacity-10 p-2 rounded">
+                        <small class="text-danger fw-bold">Left at:</small>
+                        <small class="text-white"><%= student.outTime ? new Date(student.outTime).toLocaleTimeString() : 'Unknown' %></small>
+                    </div>
+                    <form action="/staff/student/<%= student._id %>/toggle-gate" method="POST">
+                        <button class="btn btn-success w-100 fw-bold"><i class="bi bi-box-arrow-in-left me-2"></i>MARK RETURN (IN)</button>
+                    </form>
+                <% } else { %>
+                    <div class="mb-3 text-center py-2">
+                        <small class="text-success"><i class="bi bi-house-check me-1"></i>Currently in Hostel</small>
+                    </div>
+                    <form action="/staff/student/<%= student._id %>/toggle-gate" method="POST">
+                        <button class="btn btn-outline-danger w-100"><i class="bi bi-box-arrow-right me-2"></i>MARK OUT</button>
+                    </form>
+                <% } %>
+
             </div>
-        <% } else { %>
-            <div class="text-center py-5 text-muted">No pending issues!</div>
-        <% } %>
+          </div>
+        <% }) %>
+    <% } else { %>
+        <div class="col-12 text-center py-5 text-muted">No students found matching your search.</div>
+    <% } %>
+  </div>
+<% } %>
+
+
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content" style="background-color: #0f172a; border: 1px solid rgba(255,255,255,0.1);">
+      
+      <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-white"><i class="bi bi-person-plus me-2"></i>Register New Student</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <form action="/staff/student/add" method="POST">
+        <div class="modal-body p-4">
+          
+          <div class="alert alert-info d-flex align-items-center bg-opacity-10 border-info text-info mb-4">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <div>
+              <strong>Note:</strong> This student will be marked as <u>Pending</u>. The Admin must approve them.
+              <br>Default Password: <strong>123456</strong>
+            </div>
+          </div>
+
+          <h6 class="text-primary text-uppercase small fw-bold border-bottom border-secondary pb-2 mb-3">
+              Personal Information
+          </h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label class="form-label text-muted small">Full Name</label>
+                <input type="text" name="name" class="form-control" required placeholder="Student Name">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label text-muted small">Email</label>
+                <input type="email" name="email" class="form-control" required placeholder="student@example.com">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label text-muted small">Mobile Number</label>
+                <input type="text" name="phone" class="form-control" required placeholder="10-digit Mobile">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label text-muted small">Gender</label>
+                <select name="gender" class="form-select">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label text-muted small">Course</label>
+                <input type="text" name="course" class="form-control" placeholder="e.g. BCA / B.Tech">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label text-muted small">City / Address</label>
+                <input type="text" name="address" class="form-control" placeholder="City Name">
+            </div>
+          </div>
+
+          <h6 class="text-warning text-uppercase small fw-bold border-bottom border-secondary pb-2 mb-3">
+              Guardian Details
+          </h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label text-muted small">Guardian Name</label>
+                <input type="text" name="guardianName" class="form-control" placeholder="Parent's Name">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label text-muted small">Guardian Phone</label>
+                <input type="text" name="guardianPhone" class="form-control" placeholder="Parent's Mobile">
+            </div>
+          </div>
+
+        </div>
+        
+        <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold">Submit for Approval</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary"><h5 class="modal-title">My Profile</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <form action="/users/profile/update" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3"><label class="form-label text-muted small">Name</label><input type="text" class="form-control bg-secondary text-white border-0" value="<%= user.name %>" disabled></div>
+                    <div class="mb-3"><label class="form-label text-muted small">Email</label><input type="email" class="form-control bg-secondary text-white border-0" value="<%= user.email %>" disabled></div>
+                    <hr class="border-secondary opacity-25">
+                    <div class="mb-3"><label class="form-label text-primary small">Update Mobile Number</label><input type="text" name="phone" class="form-control border-primary" value="<%= user.phone %>" required></div>
+                </div>
+                <div class="modal-footer border-secondary"><button class="btn btn-primary w-100">Save Changes</button></div>
+            </form>
+        </div>
     </div>
 </div>
 
-</div>
-
 <script>
-    document.getElementById('studentSearch').addEventListener('keyup', function() {
-        let filter = this.value.toLowerCase();
-        let rows = document.querySelectorAll('#studentTableBody tr');
-
-        rows.forEach(row => {
-            let text = row.innerText.toLowerCase();
-            row.style.display = text.includes(filter) ? '' : 'none';
+    const searchInput = document.getElementById('studentSearch');
+    if(searchInput){
+        searchInput.addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#studentTableBody tr');
+            rows.forEach(row => {
+                let text = row.innerText.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
         });
-    });
+    }
 </script>

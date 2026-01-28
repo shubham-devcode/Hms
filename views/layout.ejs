@@ -1,68 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HMS | Premium Hostel Life</title>
+    <title>HMS | Next-Gen Hostel Living</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="/css/style.css">
+
 </head>
+
 <body>
 
-    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark bg-opacity-75 backdrop-blur">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
         <div class="container">
-          <a class="navbar-brand fw-bold" href="/">
-            <i class="bi bi-buildings-fill text-primary"></i> HMS Portal
+          <a class="navbar-brand fw-bold fs-3 d-flex align-items-center gap-2" href="/#home">
+            <i class="bi bi-buildings-fill text-primary"></i> 
+            <span>HMS<span class="text-primary">.</span></span>
           </a>
           
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
+          <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <i class="bi bi-list fs-1 text-white"></i>
           </button>
     
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
-              <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-              <li class="nav-item"><a class="nav-link" href="#features">Facilities</a></li>
-              <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-              <li class="nav-item ms-lg-3">
-                <a href="/users/login" class="btn btn-primary btn-sm px-4 rounded-pill fw-bold">Login</a>
+              <li class="nav-item"><a class="nav-link" href="/#home">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="/#about">About</a></li>
+              <li class="nav-item"><a class="nav-link" href="/#features">Facilities</a></li>
+              <li class="nav-item"><a class="nav-link <%= typeof path != 'undefined' && path == '/gallery' ? 'active' : '' %>" href="/gallery">Gallery</a></li>
+
+              <li class="nav-item"><a class="nav-link" href="/#contact">Contact</a></li>
+              
+              <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-flex gap-2">
+                <a href="/users/login" class="btn btn-outline-light btn-sm px-4 py-2 rounded-pill fw-medium">Login</a>
+                <a href="/users/register" class="btn btn-primary btn-sm px-4 py-2 rounded-pill fw-medium shadow-lg">Register</a>
               </li>
             </ul>
           </div>
         </div>
     </nav>
 
-    <%- body %>
+    <main>
+        <%- body %>
+    </main>
 
-    <footer id="contact" class="bg-black text-white py-5 border-top border-secondary mt-auto">
-        <div class="container text-center">
-            <h3 class="fw-bold mb-3">HMS Portal</h3>
-            <p class="text-muted mb-4">Making Hostel Life Easier, Safer, and Smarter.</p>
-            
-            <div class="d-flex justify-content-center gap-4 mb-4">
-                <a href="#" class="text-white fs-4"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-white fs-4"><i class="bi bi-instagram"></i></a>
-                <a href="#" class="text-white fs-4"><i class="bi bi-twitter-x"></i></a>
+    <footer class="bg-black text-white py-3 border-top border-secondary border-opacity-10 mt-auto" style="background-color: #01040f;">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                
+                <div class="mb-2 mb-md-0 text-center text-md-start">
+                    <span class="fw-bold fs-5 me-2">HMS<span class="text-primary">.</span></span>
+                    <span class="text-white-50 small">&copy; <%= new Date().getFullYear() %> All Rights Reserved.</span>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-white-50 hover-text-primary"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-white-50 hover-text-primary"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="text-white-50 hover-text-primary"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="text-white-50 hover-text-primary"><i class="bi bi-linkedin"></i></a>
+                </div>
             </div>
-            
-            <p class="small text-muted m-0">
-                &copy; <%= new Date().getFullYear() %> Hostel Management System. All Rights Reserved.
-            </p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
-                document.querySelector('.navbar').classList.add('shadow');
-            } else {
-                document.querySelector('.navbar').classList.remove('shadow');
-            }
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
         });
     </script>
+
 </body>
 </html>

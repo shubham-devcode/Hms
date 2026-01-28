@@ -1,38 +1,72 @@
 const express = require('express');
-const router = express.Router(); // ✅ Ye line zaroori thi, jo missing thi
+const router = express.Router();
 const bcrypt = require('bcryptjs');
 
-// Models Import
+// ==========================================
+// MODELS IMPORT
+// ==========================================
 const User = require('../models/User');
-const GalleryImage = require('../models/galleryImages'); // Home page gallery ke liye
+const GalleryImage = require('../models/GalleryImage'); 
 
 // ==========================================
 // 1. 🏠 HOME PAGE (Landing Page)
 // ==========================================
 router.get('/', async (req, res) => {
   try {
-    // Gallery images fetch karein taaki slider me dikh sakein
-    const galleryImages = await GalleryImage.find({ isVisible: true }).sort({ createdAt: -1 }).lean();
+    // Home page par sirf Latest 6 Photos dikhayenge (Site Fast rahégi)
+    const galleryImages = await GalleryImage.find()
+      .sort({ createdAt: -1 })
+      .limit(6) 
+      .lean();
     
     res.render('index', { 
-      title: 'HMS - Hostel Management System',
-      galleryImages 
+      title: 'HMS - Next Gen Hostel',
+      galleryImages, 
+      path: '/' // Navbar Active karne ke liye
     });
+
   } catch (err) {
-    console.error(err);
-    res.render('index', { title: 'HMS', galleryImages: [] });
+    console.error("Home Page Error:", err);
+    res.render('index', { 
+        title: 'HMS', 
+        galleryImages: [],
+        path: '/'
+    });
   }
 });
 
 // ==========================================
-// 🛠️ SETUP ADMIN ROUTE (One Time Use)
+// 2. 🖼️ GALLERY PAGE (Full Gallery)
+// ==========================================
+router.get('/gallery', async (req, res) => {
+  try {
+    // Yahan SAARI photos dikhayenge
+    const galleryImages = await GalleryImage.find()
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.render('gallery', {
+      title: 'Our Gallery - HMS',
+      galleryImages,
+      path: '/gallery' // Navbar Active karne ke liye
+    });
+
+  } catch (err) {
+    console.error("Gallery Page Error:", err);
+    res.redirect('/');
+  }
+});
+
+// ==========================================
+// 3. 🛠️ SETUP ADMIN ROUTE (One Time Use)
 // ==========================================
 router.get('/setup-admin', async (req, res) => {
   try {
     // Check if admin already exists
     const adminExists = await User.findOne({ role: 'admin' });
+    
     if (adminExists) {
-      return res.send('<div style="font-family: sans-serif; text-align: center; margin-top: 50px;"><h3>⚠️ Admin already exists!</h3><a href="/users/login">Go to Login</a></div>');
+      return res.send('<h3>⚠️ Admin already exists!</h3><br><a href="/users/login">Go to Login Page</a>');
     }
 
     // Create New Admin
@@ -46,17 +80,18 @@ router.get('/setup-admin', async (req, res) => {
       role: 'admin',
       rollNumber: null,
       room: null,
-      status: 'present'
+      status: 'present',
+      isApproved: true // Admin is auto-approved
     });
 
     res.send(`
-      <div style="font-family: sans-serif; text-align: center; margin-top: 50px; color: green;">
-        <h1>✅ Admin Created Successfully!</h1>
-        <p>Email: <strong>admin@hms.com</strong></p>
-        <p>Password: <strong>admin123</strong></p>
-        <br>
-        <a href="/users/login" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Login Now</a>
-      </div>
+        <div style="font-family: sans-serif; text-align: center; padding-top: 50px;">
+            <h1 style="color: green;">✅ Admin Created Successfully!</h1>
+            <p><strong>Email:</strong> admin@hms.com</p>
+            <p><strong>Password:</strong> admin123</p>
+            <hr style="width: 50%; margin: 20px auto;">
+            <a href="/users/login" style="background: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Click here to Login</a>
+        </div>
     `);
 
   } catch (err) {
@@ -65,4 +100,4 @@ router.get('/setup-admin', async (req, res) => {
   }
 });
 
-module.exports = router; // ✅ Ye line file ke end me hona zaroori hai
+module.exports = router;

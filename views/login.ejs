@@ -1,161 +1,111 @@
-<style>
-  /* Custom CSS for Unique Login Page */
-  body {
-    background: #f0f2f5; /* Light grey background */
-  }
+<div class="login-wrapper d-flex align-items-center justify-content-center position-relative overflow-hidden">
   
-  .login-container {
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    <div class="ambient-glow" style="top: -10%; left: -10%; width: 500px; height: 500px;"></div>
+    <div class="ambient-glow" style="bottom: -10%; right: -10%; width: 500px; height: 500px; background: #a855f7;"></div>
 
-  .login-card {
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    width: 100%;
-    max-width: 900px;
-    display: flex;
-    flex-wrap: wrap;
-  }
+    <div class="container position-relative z-2">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8">
+          
+          <div class="glass-card border-0 rounded-5 overflow-hidden position-relative p-4 p-md-5">
+              
+              <div class="text-center mb-5">
+                  <div class="icon-box-glow bg-primary mx-auto mb-3">
+                      <i class="bi bi-person-circle fs-2 text-white"></i>
+                  </div>
+                  <h2 class="fw-bold text-white">Welcome Back</h2>
+                  <p class="text-white-50 small">Enter your credentials to access the portal.</p>
+              </div>
 
-  /* Left Side - Gradient & Branding */
-  .login-left {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    width: 50%;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
+              <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
+                <div class="alert alert-success d-flex align-items-center bg-success bg-opacity-25 border-success text-white" role="alert">
+                   <i class="bi bi-check-circle-fill me-2"></i> <%= success_msg %>
+                </div>
+              <% } %>
 
-  .login-left h2 {
-    font-weight: 700;
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-  }
+              <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+                <div class="alert alert-danger d-flex align-items-center bg-danger bg-opacity-25 border-danger text-white" role="alert">
+                   <i class="bi bi-exclamation-triangle-fill me-2"></i> <%= error_msg %>
+                </div>
+              <% } %>
 
-  .login-left p {
-    opacity: 0.9;
-    font-size: 1.1rem;
-  }
+              <% if (typeof error !== 'undefined' && error.length > 0) { %>
+                <div class="alert alert-danger d-flex align-items-center bg-danger bg-opacity-25 border-danger text-white" role="alert">
+                   <i class="bi bi-exclamation-triangle-fill me-2"></i> <%= error %>
+                </div>
+              <% } %>
 
-  /* Right Side - Form */
-  .login-right {
-    width: 50%;
-    padding: 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
+              <form action="/users/login" method="POST">
+                  
+                  <div class="form-floating custom-floating mb-3">
+                      <input type="email" name="email" class="form-control" id="emailInput" placeholder="name@example.com" required>
+                      <label for="emailInput"><i class="bi bi-envelope me-2"></i>Email Address</label>
+                  </div>
 
-  .form-control {
-    background: #f8f9fa;
-    border: none;
-    height: 50px;
-    padding-left: 20px;
-  }
+                  <div class="form-floating custom-floating mb-4">
+                      <input type="password" name="password" class="form-control" id="passwordInput" placeholder="Password" required>
+                      <label for="passwordInput"><i class="bi bi-lock me-2"></i>Password</label>
+                  </div>
 
-  .form-control:focus {
-    box-shadow: none;
-    background: #fff;
-    border: 2px solid #764ba2;
-  }
+                  <div class="d-grid mb-4">
+                      <button type="submit" class="btn btn-primary-glow btn-lg fs-6">
+                          Secure Login <i class="bi bi-box-arrow-in-right ms-2"></i>
+                      </button>
+                  </div>
 
-  .btn-login {
-    background: #764ba2;
-    border: none;
-    height: 50px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: all 0.3s;
-  }
+                  <div class="text-center">
+                      <p class="text-white-50 mb-0">Don't have an account?</p>
+                      <a href="/users/register" class="text-primary fw-bold text-decoration-none hover-underline">Create New Account</a>
+                  </div>
 
-  .btn-login:hover {
-    background: #5b3a82;
-    transform: translateY(-2px);
-  }
+              </form>
 
-  /* Mobile Responsive */
-  @media (max-width: 768px) {
-    .login-left {
-      width: 100%;
-      padding: 30px;
-    }
-    .login-right {
-      width: 100%;
-      padding: 30px;
-    }
-  }
-</style>
-
-<div class="container login-container">
-  <div class="login-card">
-    
-    <div class="login-left">
-      <i class="bi bi-building" style="font-size: 4rem; margin-bottom: 20px;"></i>
-      <h2>HMS Portal</h2>
-      <p>Welcome back! Please login to manage your hostel activities.</p>
-    </div>
-
-    <div class="login-right">
-      <h3 class="text-center mb-4" style="color: #333; font-weight: bold;">Account Login</h3>
-
-      <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <%= success_msg %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      <% } %>
-
-      <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <%= error_msg %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      <% } %>
-
-      <% if (typeof error !== 'undefined' && error.length > 0) { %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <%= error %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      <% } %>
-
-      <form action="/users/login" method="POST">
-        
-        <div class="mb-3">
-          <label class="form-label text-muted">Email Address</label>
-          <div class="input-group">
-            <span class="input-group-text bg-light border-0"><i class="fa fa-envelope text-muted"></i></span>
-            <input type="email" name="email" class="form-control" placeholder="admin@example.com" required>
           </div>
         </div>
-
-        <div class="mb-4">
-          <label class="form-label text-muted">Password</label>
-          <div class="input-group">
-            <span class="input-group-text bg-light border-0"><i class="fa fa-lock text-muted"></i></span>
-            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-login w-100 text-white">
-          Login Securely
-        </button>
-
-        <div class="text-center mt-3">
-          <small class="text-muted">Don't have an account? <a href="/users/register" style="color: #764ba2; font-weight: 600;">Register Here</a></small>
-        </div>
-
-      </form>
+      </div>
     </div>
-
-  </div>
 </div>
+
+<style>
+    /* Wrapper to center content */
+    .login-wrapper {
+        min-height: 90vh; /* Full screen height minus navbar */
+        padding-top: 80px;
+    }
+
+    /* Custom Floating Inputs for Dark Theme */
+    .custom-floating .form-control {
+        background: rgba(15, 23, 42, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 12px;
+        height: 55px;
+    }
+    
+    .custom-floating .form-control:focus {
+        background: rgba(15, 23, 42, 0.9) !important;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        color: #fff;
+    }
+
+    .custom-floating label {
+        color: #94a3b8;
+    }
+    
+    .custom-floating .form-control:focus ~ label,
+    .custom-floating .form-control:not(:placeholder-shown) ~ label {
+        color: #3b82f6; /* Label color on focus */
+        transform: scale(0.85) translateY(-0.7rem) translateX(0.15rem);
+    }
+
+    .custom-floating .form-control::placeholder {
+        color: transparent; /* Hide default placeholder for floating label effect */
+    }
+
+    /* Hover Effects */
+    .hover-underline:hover {
+        text-decoration: underline !important;
+        color: #60a5fa !important;
+    }
+</style>

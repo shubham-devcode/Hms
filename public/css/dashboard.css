@@ -1,260 +1,243 @@
 /* =========================================
-   PREMIUM DASHBOARD THEME (Dark Glass)
+   HMS DASHBOARD THEME - DARK MODE FIXED
    ========================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --bg-dark: #0f172a;        /* Deep Blue Background */
-    --sidebar-bg: rgba(30, 41, 59, 0.7); /* Glassy Sidebar */
-    --panel-bg: rgba(30, 41, 59, 0.5);   /* Glassy Panels */
-    --primary: #6366f1;        /* Indigo Accent */
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --border-color: rgba(255, 255, 255, 0.1);
+    --primary: #3b82f6;       
+    --primary-glow: rgba(59, 130, 246, 0.5);
+    --bg-dark: #020617;       
+    --sidebar-bg: rgba(15, 23, 42, 0.95); /* Thoda solid kiya taki text clear dikhe */
+    --panel-bg: rgba(30, 41, 59, 0.6);
+    --border-color: rgba(255, 255, 255, 0.15);
+    --text-main: #ffffff;
+    --text-muted: #cbd5e1; /* Lighter grey for visibility */
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #06b6d4;
 }
 
 body {
     background-color: var(--bg-dark);
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Outfit', sans-serif;
     color: var(--text-main);
-    overflow-x: hidden; /* Horizontal scroll hide */
+    overflow-x: hidden;
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
 /* =========================================
    1. SIDEBAR STYLING
    ========================================= */
 .sidebar {
-    height: 100vh;
-    width: 260px;
-    position: fixed;
-    top: 0;
-    left: 0;
+    width: 280px;
     background: var(--sidebar-bg);
-    backdrop-filter: blur(12px); /* Blur Effect */
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-right: 1px solid var(--border-color);
-    padding: 25px 15px;
+    position: fixed;
+    top: 0; bottom: 0; left: 0;
+    z-index: 1050;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    z-index: 1000;
-    transition: all 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.brand {
-    font-size: 1.4rem;
-    font-weight: 700;
+.sidebar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
     color: #fff;
+    text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     margin-bottom: 40px;
-    padding-left: 10px;
-    letter-spacing: 0.5px;
+    padding-left: 5px;
 }
 
-.nav-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
-}
-
-.nav-item {
-    margin-bottom: 8px;
+.sidebar-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    padding-left: 12px;
+    opacity: 0.9;
 }
 
 .nav-link {
+    color: #94a3b8 !important; /* Force readable color */
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 15px;
-    color: var(--text-muted);
+    gap: 12px;
+    transition: all 0.3s ease;
+    margin-bottom: 5px;
+    position: relative;
+    overflow: hidden;
     text-decoration: none;
-    padding: 12px 15px;
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 500;
-    font-size: 0.95rem;
 }
 
-.nav-link:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    transform: translateX(5px);
+.nav-link:hover, .nav-link.active {
+    background: rgba(59, 130, 246, 0.15);
+    color: #ffffff !important;
 }
 
-.nav-link.active {
-    background: linear-gradient(90deg, var(--primary), #8b5cf6);
-    color: white;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--primary);
+    box-shadow: 0 0 15px var(--primary);
+    border-radius: 0 4px 4px 0;
 }
 
-.nav-link i {
-    font-size: 1.2rem;
-}
+.nav-link i { font-size: 1.2rem; }
+.nav-link.active i { color: var(--primary); }
 
 /* =========================================
    2. MAIN CONTENT AREA
    ========================================= */
 .main-content {
-    margin-left: 260px; /* Sidebar Width */
+    margin-left: 280px;
     padding: 30px;
     min-height: 100vh;
+    transition: margin-left 0.3s ease;
 }
 
-/* Top Header */
-.top-header {
+.dashboard-header {
+    background: var(--panel-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 15px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 35px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
-.user-profile {
+.user-badge {
     display: flex;
     align-items: center;
-}
-
-.avatar-md {
-    width: 45px; 
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--primary);
-    padding: 2px;
+    gap: 12px;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50px;
+    border: 1px solid var(--border-color);
+    color: #fff;
 }
 
 /* =========================================
-   3. PANELS & CARDS (Containers)
+   3. AVATARS
+   ========================================= */
+.avatar-circle {
+    width: 35px; height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: linear-gradient(135deg, var(--primary), #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: white;
+    flex-shrink: 0;
+}
+.avatar-sm { width: 30px; height: 30px; font-size: 10px; }
+.avatar-md { width: 50px; height: 50px; font-size: 18px; }
+.avatar-lg { width: 100px; height: 100px; font-size: 32px; }
+
+/* =========================================
+   4. STAT CARDS & PANELS
    ========================================= */
 .panel {
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 25px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-/* Stat Cards (Dashboard Overview) */
-.stat-card {
+    overflow: hidden;
+    transition: transform 0.3s ease;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: transform 0.3s;
+    flex-direction: column;
+    color: white;
 }
 
-.stat-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255,255,255,0.2);
-}
-
-.stat-icon {
-    width: 50px;
-    height: 50px;
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: 0.2s;
+    color: white;
+}
+
+.stats-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex; flex-direction: column; justify-content: space-between;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.stats-icon {
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
     font-size: 1.5rem;
+    margin-bottom: 15px;
 }
 
-/* Colors for Icons */
-.icon-primary { background: rgba(99, 102, 241, 0.1); color: #6366f1; }
-.icon-success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
-.icon-warning { background: rgba(234, 179, 8, 0.1); color: #eab308; }
-.icon-danger  { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+.bg-icon-primary { background: rgba(59, 130, 246, 0.15); color: var(--primary); }
+.bg-icon-success { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+.bg-icon-warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+.bg-icon-danger  { background: rgba(239, 68, 68, 0.15);  color: var(--danger); }
+
+.stats-number { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 5px; line-height: 1; }
+.stats-label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
 
 /* =========================================
-   4. FORMS & INPUTS
+   5. ROOM CARDS
    ========================================= */
-.form-control, .form-select {
-    background-color: rgba(15, 23, 42, 0.6) !important;
-    border: 1px solid var(--border-color) !important;
-    color: #fff !important;
-    padding: 10px 15px;
-    border-radius: 8px;
+.room-card-header {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    width: 100%;
 }
 
-.form-control:focus, .form-select:focus {
-    background-color: rgba(15, 23, 42, 0.8) !important;
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
-}
-
-::placeholder {
-    color: rgba(255,255,255,0.3) !important;
-}
-
-/* =========================================
-   5. TABLES
-   ========================================= */
-.table-custom {
-    --bs-table-bg: transparent;
-    --bs-table-color: var(--text-muted);
-    vertical-align: middle;
-}
-
-.table-custom th {
-    background-color: rgba(0, 0, 0, 0.2) !important;
-    color: #fff;
+.room-type-badge {
+    position: absolute;
+    top: 15px; right: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 1px;
-    border-bottom: 1px solid var(--border-color);
-    padding: 15px;
-}
-
-.table-custom td {
-    padding: 15px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.table-hover tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.03);
-}
-
-/* =========================================
-   6. EXTRAS (Badges, Buttons, Scrollbar)
-   ========================================= */
-.badge {
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-weight: 500;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: var(--bg-dark); 
-}
-::-webkit-scrollbar-thumb {
-    background: #334155; 
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #475569; 
-}
-
-/* Gallery & Room Images */
-.gallery-img, .room-img {
-    transition: transform 0.3s;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.room-card-header {
-    height: 150px;
-    overflow: hidden;
-    position: relative;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
 .progress-thin {
@@ -264,20 +247,144 @@ body {
     overflow: hidden;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-    }
-    .main-content {
-        margin-left: 0;
-        padding: 15px;
-    }
-    .brand {
-        margin-bottom: 20px;
-    }
+/* =========================================
+   6. TABLES & LISTS
+   ========================================= */
+.table-responsive { border-radius: 16px; }
+
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    color: white;
 }
+
+.custom-table thead th {
+    background: transparent;
+    color: #cbd5e1; /* Light Grey Header */
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 15px 10px 15px;
+    border: none;
+    font-weight: 600;
+}
+
+.custom-table tbody tr {
+    background: rgba(255, 255, 255, 0.05);
+    transition: 0.2s;
+}
+
+.custom-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.01);
+}
+
+.custom-table td {
+    padding: 14px 16px;
+    color: white;
+    border: none;
+    vertical-align: middle;
+}
+
+.custom-table td:first-child { border-radius: 12px 0 0 12px; }
+.custom-table td:last-child { border-radius: 0 12px 12px 0; }
+
+/* =========================================
+   7. UTILITIES & ANIMATIONS
+   ========================================= */
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.bg-success-subtle { background-color: rgba(16, 185, 129, 0.2) !important; color: #6ee7b7 !important; }
+.bg-danger-subtle { background-color: rgba(239, 68, 68, 0.2) !important; color: #fca5a5 !important; }
+.bg-warning-subtle { background-color: rgba(245, 158, 11, 0.2) !important; color: #fcd34d !important; }
+.bg-info-subtle { background-color: rgba(6, 182, 212, 0.2) !important; color: #67e8f9 !important; }
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+.animate-pulse { animation: pulse-red 2s infinite; }
+
+.btn-primary-glow {
+    background: var(--primary);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px var(--primary-glow);
+    transition: 0.3s;
+}
+.btn-primary-glow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--primary-glow);
+    color: white;
+}
+
+/* =========================================
+   8. MOBILE RESPONSIVENESS
+   ========================================= */
+@media (max-width: 991px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.show {
+        transform: translateX(0);
+        box-shadow: 5px 0 30px rgba(0,0,0,0.5);
+    }
+    .main-content { margin-left: 0; padding: 15px; width: 100%; }
+    .sidebar-overlay {
+        display: none;
+        position: fixed; top:0; left:0; right:0; bottom:0;
+        background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+        z-index: 1040;
+    }
+    .sidebar-overlay.show { display: block; }
+}
+
+/* =========================================================
+   9. ULTIMATE COLOR FIXES (Ye Code Text Ko White Karega)
+   ========================================================= */
+
+/* 1. Force Bootstrap Text Colors to White/Light */
+.text-muted { color: #cbd5e1 !important; } /* Light Grey */
+.text-dark { color: #ffffff !important; } /* White */
+.text-secondary { color: #94a3b8 !important; }
+
+/* 2. Fix Input Fields & Selects */
+.form-control, .form-select, textarea {
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+.form-control:focus, .form-select:focus {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+::placeholder { color: rgba(255, 255, 255, 0.5) !important; opacity: 1; }
+
+/* 3. Fix Modals (Popups) */
+.modal-content {
+    background-color: #1e293b !important; /* Dark Grey Blue */
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white !important;
+}
+.modal-header, .modal-footer { border-color: rgba(255,255,255,0.1) !important; }
+.btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+
+/* 4. Fix List Groups (Roommates List) */
+.list-group-item {
+    background-color: transparent !important;
+    color: white !important;
+    border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* 5. Force Table Text */
+.table { --bs-table-color: white !important; color: white !important; }

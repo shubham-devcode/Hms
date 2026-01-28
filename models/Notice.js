@@ -1,9 +1,22 @@
 const mongoose = require('mongoose');
 
 const NoticeSchema = new mongoose.Schema({
-  title: String,
-  message: String,
-  priority: { type: String, default: 'Normal' }
-}, { timestamps: true });
+    title: {
+        type: String,
+        required: true
+    },
+    content: {
+        type: String,
+        required: true
+    },
+    postedBy: {
+        type: String, // Admin Name
+        default: 'Admin'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
 
 module.exports = mongoose.model('Notice', NoticeSchema);
