@@ -1,0 +1,79 @@
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="panel h-100 p-4">
+            <h5 class="text-white fw-bold mb-4 border-bottom border-secondary pb-3">
+                <i class="bi bi-pencil-square me-2 text-primary"></i>Post New Notice
+            </h5>
+            
+            <form action="/admin/notices/add" method="POST">
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Notice Title</label>
+                    <input type="text" name="title" class="form-control" placeholder="e.g. Exam Schedule Released" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label text-muted small">Content / Message</label>
+                    <textarea name="content" class="form-control" rows="6" placeholder="Type the notice details here..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold">
+                    <i class="bi bi-send-fill me-2"></i>Publish Notice
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="panel h-100 p-0 overflow-hidden d-flex flex-column">
+            
+            <div class="p-4 border-bottom border-secondary d-flex justify-content-between align-items-center bg-dark-subtle">
+                <h5 class="mb-0 fw-bold text-white">
+                    <i class="bi bi-megaphone-fill me-2 text-warning"></i>Active Notices
+                </h5>
+                <span class="badge bg-primary rounded-pill px-3"><%= notices.length %> Posted</span>
+            </div>
+
+            <div class="flex-grow-1 overflow-auto custom-scrollbar" style="max-height: 600px;">
+                <% if(notices.length > 0) { %>
+                    <div class="d-flex flex-column">
+                        <% notices.forEach(notice => { %>
+                            <div class="p-4 border-bottom border-secondary position-relative hover-bg-dark transition-effect">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="pe-4">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <h6 class="mb-0 fw-bold text-white"><%= notice.title %></h6>
+                                            <% if(new Date(notice.createdAt).toDateString() === new Date().toDateString()) { %>
+                                                <span class="badge bg-danger-subtle text-danger" style="font-size: 0.65rem;">NEW</span>
+                                            <% } %>
+                                        </div>
+                                        
+                                        <p class="mb-2 text-muted small" style="line-height: 1.6;"><%= notice.content %></p>
+                                        
+                                        <div class="d-flex align-items-center text-info small" style="font-size: 0.75rem;">
+                                            <i class="bi bi-clock-history me-1"></i>
+                                            <%= new Date(notice.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                            <span class="mx-2 text-secondary">|</span>
+                                            <%= new Date(notice.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+                                        </div>
+                                    </div>
+
+                                    <form action="/admin/notices/delete/<%= notice._id %>" method="POST" onsubmit="return confirm('Delete this notice?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-5 mt-5 text-muted">
+                        <i class="bi bi-clipboard-x fs-1 mb-3 d-block opacity-25"></i>
+                        <p>No notices posted yet.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

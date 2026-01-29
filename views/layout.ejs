@@ -80,6 +80,31 @@
             else navbar.classList.remove('scrolled');
         });
     </script>
+    <script>
+    // Sidebar Toggle Logic
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    const toggleBtn = document.querySelector('#sidebarToggle'); // Button ki ID check karein
+
+    function toggleSidebar() {
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+    }
+
+    // Button click par open karein
+    if(toggleBtn) {
+        toggleBtn.addEventListener('click', toggleSidebar);
+    }
+
+    // Overlay (Kala hissa) click karne par close karein
+    if(overlay) {
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+    }
+</script>
+
 
 </body>
 </html>

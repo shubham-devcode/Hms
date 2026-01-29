@@ -2,15 +2,12 @@ const mongoose = require('mongoose');
 
 const ComplaintSchema = new mongoose.Schema({
   
-  // 1. Who complained?
   student: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
 
-  // (Optional) Room snapshot - taaki pata rahe ki complaint kis room se aayi thi
-  // bhale hi student baad me room change kar le.
   room: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Room'
@@ -19,7 +16,7 @@ const ComplaintSchema = new mongoose.Schema({
   // 2. Complaint Details
   category: {
     type: String,
-    enum: ['Electricity', 'Plumbing', 'Furniture', 'WiFi', 'Cleaning', 'Food', 'Other'],
+    enum: ['Electricity', 'Plumbing', 'Furniture', 'WiFi', 'Cleaning', 'Food', 'Other', 'Waiting For Room'],
     required: true
   },
 

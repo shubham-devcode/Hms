@@ -1,0 +1,132 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="text-white fw-bold m-0">Student Directory</h3>
+    
+    <button class="btn btn-primary-glow" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+        <i class="bi bi-person-plus-fill me-2"></i> Add Student
+    </button>
+</div>
+
+<div class="panel p-3 mb-4 d-flex gap-2">
+    <form action="/admin/dashboard" method="GET" class="d-flex gap-2 flex-grow-1">
+        <input type="hidden" name="section" value="students">
+        <input type="text" name="search" class="form-control" placeholder="Search by name or roll no..." value="<%= typeof searchQuery != 'undefined' ? searchQuery : '' %>">
+        <button class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+<div class="table-container p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="custom-table mb-0">
+            <thead>
+                <tr>
+                    <th> Roll No </th>
+                    <th> Profile </th>
+                    <th> Room </th>
+                    <th> Status </th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(students.length > 0) { %>
+                    <% students.forEach(student => { %>
+                        <tr>
+                            <td><span class="badge bg-secondary font-monospace"><%= student.rollNumber || 'N/A' %></span></td>
+                            
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-circle">
+                                        <%= student.name.charAt(0).toUpperCase() %>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-white"><%= student.name %></div>
+                                        <div class="small text-muted"><%= student.email %></div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <% if(student.room) { %>
+                                    <span class="badge bg-success-subtle border border-success text-success">
+                                        Room <%= student.room.roomNumber %>
+                                    </span>
+                                <% } else { %>
+                                    <span class="badge bg-danger-subtle border border-danger text-danger">Unassigned</span>
+                                <% } %>
+                            </td>
+
+                            <td>
+                                <% if(student.status === 'present') { %>
+                                    <span class="badge-status badge-success">Present</span>
+                                <% } else { %>
+                                    <span class="badge-status badge-warning">On Leave</span>
+                                <% } %>
+                            </td>
+
+                            <td class="text-end">
+                                
+                                <form action="/admin/students/status/<%= student._id %>" method="POST" class="d-inline">
+                                    <% if(student.status === 'present') { %>
+                                        <button class="btn btn-sm btn-outline-warning rounded-circle me-1" title="Mark On Leave">
+                                            <i class="bi bi-airplane"></i>
+                                        </button>
+                                    <% } else { %>
+                                        <button class="btn btn-sm btn-outline-success rounded-circle me-1" title="Mark Present">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
+                                    <% } %>
+                                </form>
+
+                                <% if(student.room) { %>
+                                    <form action="/admin/students/deallocate/<%= student._id %>" method="POST" class="d-inline" onsubmit="return confirm('Unassign Room from <%= student.name %>?')">
+                                        <button class="btn btn-sm btn-outline-danger rounded-circle me-1" title="Unassign Room">
+                                            <i class="bi bi-house-dash-fill"></i>
+                                        </button>
+                                    </form>
+                                <% } else { %>
+                                    <button class="btn btn-sm btn-outline-primary rounded-circle me-1" data-bs-toggle="modal" data-bs-target="#assignModal<%= student._id %>" title="Assign Room">
+                                        <i class="bi bi-house-add-fill"></i>
+                                    </button>
+                                <% } %>
+                                
+                                <form action="/admin/students/delete/<%= student._id %>" method="POST" class="d-inline" onsubmit="return confirm('Permanently delete <%= student.name %>?')">
+                                    <button class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        
+                        <div class="modal fade" id="assignModal<%= student._id %>" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content" style="background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.1);">
+                                    <div class="modal-header border-secondary">
+                                        <h5 class="modal-title">Assign Room to <%= student.name %></h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form action="/admin/students/assign/<%= student._id %>" method="POST">
+                                        <div class="modal-body">
+                                            <label class="form-label text-muted">Select Available Room</label>
+                                            <select name="roomId" class="form-select">
+                                                <option value="" disabled selected>-- Choose Room --</option>
+                                                <% rooms.forEach(r => { %>
+                                                    <% const isFull = r.occupants.length >= r.capacity %>
+                                                    <option value="<%= r._id %>" <%= isFull ? 'disabled' : '' %>>
+                                                        Room <%= r.roomNumber %> (<%= r.occupants.length %>/<%= r.capacity %>)
+                                                    </option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                        <div class="modal-footer border-secondary">
+                                            <button class="btn btn-primary w-100">Confirm Assignment</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    <% }) %>
+                <% } else { %>
+                    <tr><td colspan="5" class="text-center py-5 text-muted">No students found.</td></tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

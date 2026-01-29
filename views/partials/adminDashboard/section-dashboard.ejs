@@ -1,0 +1,168 @@
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="stats-icon bg-icon-primary"><i class="bi bi-people-fill"></i></div>
+        <div class="stats-number"><%= stats.totalStudents %></div>
+        <div class="stats-label">Total Students</div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="stats-icon bg-icon-success"><i class="bi bi-pie-chart-fill"></i></div>
+        <div class="stats-number"><%= stats.occupancyRate %>%</div>
+        <div class="stats-label">Occupancy Rate</div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="stats-icon bg-icon-warning"><i class="bi bi-arrow-left-right"></i></div>
+        <div class="stats-number"><%= stats.pendingRequests %></div>
+        <div class="stats-label">Pending Requests</div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="stats-icon bg-icon-danger"><i class="bi bi-exclamation-triangle-fill"></i></div>
+        <div class="stats-number"><%= complaints.length %></div>
+        <div class="stats-label">Active Issues</div>
+      </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    
+    <div class="col-lg-8">
+      <div class="panel h-100 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
+            <h5 class="text-white fw-bold m-0">
+                <i class="bi bi-clock-history me-2 text-warning"></i>Recent Issues
+            </h5>
+            <a href="/admin/dashboard?section=complaints" class="btn btn-sm btn-outline-light rounded-pill px-3">View All</a>
+        </div>
+        
+        <% if(complaints.length > 0) { %>
+          <div class="table-responsive">
+            <table class="custom-table align-middle">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Issue Details</th>
+                  <th>Status</th>
+                  <th class="text-end">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% complaints.slice(0, 5).forEach(c => { %>
+                  <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar-circle bg-dark border border-secondary text-white fw-bold" style="width:35px; height:35px; font-size:12px;">
+                                <%= (c.student && c.student.name) ? c.student.name.charAt(0).toUpperCase() : 'U' %>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-white small"><%= (c.student && c.student.name) ? c.student.name : 'Unknown User' %></div>
+                                <div class="text-muted" style="font-size: 0.75rem;">
+                                    <%= new Date(c.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="badge bg-secondary mb-1" style="font-size: 0.65rem;"><%= c.category %></span>
+                        <div class="text-light small text-truncate" style="max-width: 180px;" title="<%= c.title %>">
+                            <%= c.title %>
+                        </div>
+                    </td>
+
+                    <td>
+                        <% if(c.status === 'pending') { %>
+                            <span class="badge bg-danger-subtle text-danger border border-danger small">
+                                <i class="bi bi-hourglass-split me-1"></i>Pending
+                            </span>
+                        <% } else { %>
+                            <span class="badge bg-success-subtle text-success border border-success small">
+                                <i class="bi bi-check-circle me-1"></i>Resolved
+                            </span>
+                        <% } %>
+                    </td>
+
+                    <td class="text-end">
+                      <form action="/admin/complaints/<%= c._id %>/resolve" method="POST">
+                        <button class="btn btn-sm btn-outline-success rounded-circle" title="Mark as Resolved">
+                            <i class="bi bi-check-lg"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="text-center py-5">
+              <i class="bi bi-check2-circle fs-1 text-success mb-3 d-block opacity-50"></i>
+              <p class="text-muted small">No pending issues. Great job! 🎉</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="panel h-100 p-4">
+            <h5 class="text-white fw-bold mb-4 border-bottom border-secondary pb-3">
+                <i class="bi bi-lightning-charge-fill me-2 text-warning"></i>Quick Actions
+            </h5>
+            
+            <div class="d-grid gap-3">
+                <a href="/admin/dashboard?section=approvals" class="btn btn-outline-success text-start position-relative p-3 rounded-3 d-flex align-items-center transition-hover">
+                    <div class="bg-success bg-opacity-10 p-2 rounded me-3 text-success">
+                        <i class="bi bi-person-check-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Approve Students</div>
+                        <div class="small opacity-75">Review new registrations</div>
+                    </div>
+                    <% if(stats.pendingApprovals > 0) { %>
+                        <span class="position-absolute top-50 end-0 translate-middle-y me-3 badge rounded-pill bg-danger animate-pulse">
+                            <%= stats.pendingApprovals %>
+                        </span>
+                    <% } %>
+                </a>
+
+                <a href="/admin/dashboard?section=requests" class="btn btn-outline-warning text-start p-3 rounded-3 d-flex align-items-center transition-hover">
+                    <div class="bg-warning bg-opacity-10 p-2 rounded me-3 text-warning">
+                        <i class="bi bi-arrow-left-right fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Room Change</div>
+                        <div class="small opacity-75">Handle transfer requests</div>
+                    </div>
+                </a>
+
+                <a href="/admin/dashboard?section=notices" class="btn btn-outline-info text-start p-3 rounded-3 d-flex align-items-center transition-hover">
+                    <div class="bg-info bg-opacity-10 p-2 rounded me-3 text-info">
+                        <i class="bi bi-megaphone-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Post Notice</div>
+                        <div class="small opacity-75">Broadcast announcements</div>
+                    </div>
+                </a>
+
+                <a href="/admin/dashboard?section=gallery" class="btn btn-outline-light text-start p-3 rounded-3 d-flex align-items-center transition-hover">
+                    <div class="bg-secondary bg-opacity-25 p-2 rounded me-3 text-white">
+                        <i class="bi bi-images fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Gallery Upload</div>
+                        <div class="small opacity-75">Manage event photos</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

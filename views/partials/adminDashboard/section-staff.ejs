@@ -1,0 +1,99 @@
+<div class="row g-4 mb-4">
+      <div class="col-md-4">
+          <div class="stats-card">
+              <div class="stats-icon bg-icon-primary"><i class="bi bi-people-fill"></i></div>
+              <div class="stats-number"><%= stats.staffStats.total %></div>
+              <div class="stats-label">Total Staff Members</div>
+          </div>
+      </div>
+      <div class="col-md-4">
+          <div class="stats-card">
+              <div class="stats-icon bg-icon-success"><i class="bi bi-person-check-fill"></i></div>
+              <div class="stats-number"><%= stats.staffStats.active %></div>
+              <div class="stats-label">Active (On Duty)</div>
+          </div>
+      </div>
+      <div class="col-md-4">
+          <div class="stats-card">
+              <div class="stats-icon bg-icon-warning"><i class="bi bi-person-dash-fill"></i></div>
+              <div class="stats-number"><%= stats.staffStats.onLeave %></div>
+              <div class="stats-label">On Leave</div>
+          </div>
+      </div>
+  </div>
+
+  <div class="panel p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
+          <h4 class="text-white fw-bold m-0">Staff Directory</h4>
+          
+          <button class="btn btn-primary-glow" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+              <i class="bi bi-person-plus-fill me-2"></i> Add New Staff
+          </button>
+      </div>
+
+      <div class="table-responsive">
+          <table class="custom-table">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Contact</th>
+                      <th>Status</th>
+                      <th>Last Update</th>
+                      <th class="text-end">Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <% if(staff.length > 0) { %>
+                      <% staff.forEach(s => { %>
+                          <tr>
+                              <td>
+                                  <div class="d-flex align-items-center gap-3">
+                                      <div class="avatar-circle bg-info text-dark fw-bold">
+                                          <%= s.name.charAt(0) %>
+                                      </div>
+                                      <div class="fw-bold text-white"><%= s.name %></div>
+                                  </div>
+                              </td>
+                              <td class="text-muted"><%= s.phone || s.email %></td>
+                              <td>
+                                  <% if(s.status === 'present') { %>
+                                      <span class="badge bg-success-subtle text-success border border-success">
+                                          <i class="bi bi-dot me-1"></i>Active
+                                      </span>
+                                  <% } else { %>
+                                      <span class="badge bg-warning-subtle text-warning border border-warning">
+                                          <i class="bi bi-clock-history me-1"></i>On Leave
+                                      </span>
+                                  <% } %>
+                              </td>
+                              <td class="small text-muted">
+                                  <%= s.statusUpdatedAt ? new Date(s.statusUpdatedAt).toLocaleDateString() : 'N/A' %>
+                                  <br>
+                                  <small><%= s.statusUpdatedAt ? new Date(s.statusUpdatedAt).toLocaleTimeString() : '' %></small>
+                              </td>
+                              <td class="text-end">
+                                  <form action="/admin/staff/status/<%= s._id %>" method="POST" class="d-inline">
+                                      <% if(s.status === 'present') { %>
+                                          <button class="btn btn-sm btn-outline-warning rounded-pill px-3" title="Mark as On Leave">
+                                              Mark Leave
+                                          </button>
+                                      <% } else { %>
+                                          <button class="btn btn-sm btn-outline-success rounded-pill px-3" title="Mark as Active">
+                                              Mark Active
+                                          </button>
+                                      <% } %>
+                                  </form>
+
+                                  <form action="/admin/staff/delete/<%= s._id %>" method="POST" class="d-inline ms-2" onsubmit="return confirm('Remove Staff?')">
+                                      <button class="btn btn-sm btn-outline-danger rounded-circle"><i class="bi bi-trash"></i></button>
+                                  </form>
+                              </td>
+                          </tr>
+                      <% }) %>
+                  <% } else { %>
+                      <tr><td colspan="5" class="text-center py-5 text-muted">No staff members found.</td></tr>
+                  <% } %>
+              </tbody>
+          </table>
+      </div>
+  </div>

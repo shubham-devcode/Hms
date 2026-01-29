@@ -28,18 +28,17 @@ body {
     line-height: 1.6;
 }
 
-/* Fix for Bootstrap Text Colors on Dark Background */
+
 .text-muted { color: var(--text-muted) !important; }
 .text-dark { color: var(--text-white) !important; }
 h1, h2, h3, h4, h5, h6 { color: var(--text-white); }
 
-/* Anchor Link Offset (Taaki heading navbar ke peeche na chupe) */
 section[id] {
     scroll-margin-top: 100px;
 }
 
 /* ============================
-   2. NAVBAR STYLES (Merged from Layout)
+   2. NAVBAR STYLES 
    ============================ */
 .navbar { 
     padding: 15px 0; 
@@ -345,3 +344,64 @@ section[id] {
 .hover-text-primary { transition: color 0.3s ease; }
 .hover-text-primary:hover { color: #3b82f6 !important; }
 .transition-all { transition: all 0.3s ease; }
+
+@media (max-width: 991px) {
+    
+    /* 1. Sidebar Styles */
+    .sidebar {
+        position: fixed;         /* Screen par chipka rahe */
+        top: 0;
+        left: 0;
+        height: 100vh;           /* Poori height le */
+        width: 280px;            /* Fixed choudaai */
+        background-color: #0f172a; /* Dashboard ka dark color */
+        transform: translateX(-100%); /* Screen ke bahar chupa rahe */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth Animation */
+        z-index: 1050;           /* Overlay ke upar dikhe */
+        overflow-y: auto;        /* Content jyada ho to scroll ho */
+    }
+
+    /* Jab Sidebar Active ho (JS se class add hogi) */
+    .sidebar.show {
+        transform: translateX(0); /* Wapas screen par layein */
+        box-shadow: 10px 0 30px rgba(0,0,0,0.5); /* Shadow effect */
+    }
+
+    /* 2. Main Content Reset */
+    .main-content {
+        margin-left: 0 !important; /* Desktop ka margin hatayein */
+        width: 100%;
+        padding: 15px;
+    }
+
+    /* 3. Overlay (Black Blur Background) */
+    .sidebar-overlay {
+        display: none;       /* Default hide */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6); /* Kala transparent background */
+        backdrop-filter: blur(4px);      /* Peeche ka content blur karein */
+        z-index: 1040;       /* Sidebar ke theek neeche */
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Jab Overlay Active ho */
+    .sidebar-overlay.show {
+        display: block;
+        opacity: 1;
+    }
+    
+    /* Navbar Toggle Button (Mobile Only) */
+    .mobile-toggle-btn {
+        display: block !important; /* Mobile me dikhe */
+        font-size: 1.5rem;
+        color: white;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+}

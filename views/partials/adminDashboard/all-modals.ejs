@@ -1,0 +1,223 @@
+<%# Student Model%>
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="background-color: #0f172a; border: 1px solid rgba(255,255,255,0.1);">
+            
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold text-white">
+                    <i class="bi bi-person-lines-fill me-2 text-primary"></i>Student Registration
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <form action="/admin/students/add" method="POST">
+                    
+                    <h6 class="text-primary text-uppercase small fw-bold border-bottom border-secondary pb-2 mb-3">
+                        <i class="bi bi-person-bounding-box me-2"></i>Personal Information
+                    </h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">Full Name</label>
+                            <input type="text" name="name" class="form-control" required placeholder="John Doe">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">Email</label>
+                            <input type="email" name="email" class="form-control" required placeholder="student@example.com">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">Mobile Number</label>
+                            <input type="text" name="phone" class="form-control" required placeholder="10-digit Mobile">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">Gender</label>
+                            <select name="gender" class="form-select">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">Course / Branch</label>
+                            <input type="text" name="course" class="form-control" placeholder="e.g. B.Tech CS">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">Home Address</label>
+                            <input type="text" name="address" class="form-control" placeholder="City, State">
+                        </div>
+                    </div>
+
+                    <h6 class="text-info text-uppercase small fw-bold border-bottom border-secondary pb-2 mb-3">
+                        <i class="bi bi-people-fill me-2"></i>Guardian Details
+                    </h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Guardian Name</label>
+                            <input type="text" name="guardianName" class="form-control" placeholder="Parent's Name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Guardian Phone</label>
+                            <input type="text" name="guardianPhone" class="form-control" placeholder="Parent's Mobile">
+                        </div>
+                    </div>
+
+                    <h6 class="text-warning text-uppercase small fw-bold border-bottom border-secondary pb-2 mb-3">
+                        <i class="bi bi-shield-lock-fill me-2"></i>Account & Room Setup
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">Create Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">Confirm Password</label>
+                            <input type="password" name="confirm_password" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">Assign Room (Optional)</label>
+                            <select name="roomId" class="form-select">
+                                <option value="">-- No Room Assigned --</option>
+                                <% rooms.forEach(room => { %>
+                                    <% if(room.occupants.length < room.capacity) { %>
+                                        <option value="<%= room._id %>">
+                                            Room <%= room.roomNumber %> (Vacant: <%= room.capacity - room.occupants.length %>)
+                                        </option>
+                                    <% } %>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-secondary mt-4 px-0 pb-0">
+                        <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold">Register Student</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%# Staff Model%>
+<div class="modal fade" id="addStaffModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #0f172a; border: 1px solid rgba(255,255,255,0.1);">
+            
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold text-white">
+                    <i class="bi bi-person-badge-fill me-2 text-success"></i>Add New Staff
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form action="/admin/staff/add" method="POST">
+                <div class="modal-body p-4">
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Full Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Ramesh Kumar" required>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="staff@example.com" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Phone</label>
+                            <input type="text" name="phone" class="form-control" placeholder="10-digit Mobile" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Role</label>
+                        <input type="text" class="form-control" value="Staff" disabled readonly>
+                        <input type="hidden" name="role" value="staff"> 
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Confirm Password</label>
+                            <input type="password" name="confirm_password" class="form-control" required>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold">Register Staff</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<%# Room Model%>
+<div class="modal fade" id="addRoomModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #0f172a; border: 1px solid rgba(255,255,255,0.1);">
+            
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold text-white">
+                    <i class="bi bi-door-open-fill me-2 text-warning"></i>Add New Room
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form action="/admin/rooms/add" method="POST">
+                <div class="modal-body p-4">
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Room Number</label>
+                            <input type="text" name="roomNumber" class="form-control" placeholder="e.g. A-101" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Room Type</label>
+                            <select name="type" class="form-select">
+                                <option value="Double" selected>Double (2 Beds)</option>
+                                <option value="Single">Single (1 Bed)</option>
+                                <option value="Triple">Triple (3 Beds)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Capacity</label>
+                            <input type="number" name="capacity" class="form-control" value="2" min="1" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Price (₹/Month)</label>
+                            <input type="number" name="price" class="form-control" value="5000" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Features (Amenities)</label>
+                        <input type="text" name="features" class="form-control" placeholder="e.g. AC, Balcony, Wi-Fi, Table">
+                        <div class="form-text text-white-50 small">Comma separated (e.g. AC, Wi-Fi).</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Room Image URL</label>
+                        <input type="url" name="roomImage" class="form-control" placeholder="https://example.com/room.jpg">
+                    </div>
+
+                </div>
+                
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning rounded-pill px-4 fw-bold text-dark">Create Room</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

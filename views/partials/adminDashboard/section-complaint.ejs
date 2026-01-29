@@ -1,0 +1,55 @@
+<h3 class="fw-bold mb-4 text-white">Issue Tracking</h3>
+  <div class="table-container p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="custom-table mb-0">
+        <thead>
+          <tr>
+            <th class="ps-4">Date</th>
+            <th>Student</th>
+            <th>Details</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th class="text-end pe-4">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if(complaints.length > 0) { %>
+            <% complaints.forEach(c => { %>
+              <tr>
+                <td class="ps-4 text-muted small"><%= new Date(c.createdAt).toLocaleDateString() %></td>
+                <td>
+                    <div class="fw-bold text-white"><%= c.student ? c.student.name : 'Unknown' %></div>
+                    <div class="small text-muted">Room: <%= c.student && c.student.room ? c.student.room.roomNumber : 'N/A' %></div>
+                </td>
+                <td>
+                    <span class="badge bg-secondary mb-1"><%= c.category %></span>
+                    <div class="text-white-50 text-truncate" style="max-width: 250px;"><%= c.title %></div>
+                </td>
+                <td>
+                    <span class="badge <%= c.priority === 'High' ? 'bg-danger-subtle' : 'bg-info-subtle' %>"><%= c.priority %></span>
+                </td>
+                <td>
+                    <span class="badge-status <%= c.status === 'resolved' ? 'badge-success' : 'badge-danger animate-pulse' %>">
+                        <%= c.status %>
+                    </span>
+                </td>
+                <td class="text-end pe-4">
+                  <% if(c.status !== 'resolved') { %>
+                    <form action="/admin/complaints/<%= c._id %>/resolve" method="POST">
+                        <button class="btn btn-sm btn-outline-success rounded-pill px-3">Mark Resolved</button>
+                    </form>
+                  <% } else { %>
+                    <span class="text-success small"><i class="bi bi-check-all me-1"></i>Completed</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="6" class="text-center py-5 text-muted">No complaints found.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+

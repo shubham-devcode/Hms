@@ -2,30 +2,21 @@ const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated } = require('../config/auth');
 
-//Room Management
+// Imports Controllers
 const roomCtrl = require('../controllers/admin/roomMngt/roomController.js')
-
-// Student Management Controllers
 const addStdCtrl = require('../controllers/admin/studentMngt/addStudentCtrl');
 const studentStatusCtrl = require('../controllers/admin/studentMngt/stdStatusCtrl');
 const delStdCtrl = require('../controllers/admin/studentMngt/delstudentdCtrl');
-const manAsnRmCtrl = require('../controllers/admin/studentMngt/manAssignRoomCtrl');
+const manAsnRmCtrl = require('../controllers/admin/studentMngt/assignRoomCtrl');
+const removeRoomCtrl = require('../controllers/admin/studentMngt/removeRoomCtrl.js')
 const stdAprvCtrl = require('../controllers/admin/studentMngt/stdAprovCtrl');
-
-// Staff Management
 const addStaffCtrl = require('../controllers/admin/staffMngt/addStaffCtrl.js');
 const delStaffCtrl = require('../controllers/admin/staffMngt/delStaffCtrl.js');
 const staffStsCtrl = require('../controllers/admin/staffMngt/staffStatusCtrl.js')
-
-// Communications Controllers
 const cmptCtrl = require('../controllers/admin/communication/complaintsCtrl');
 const nteCtrl = require('../controllers/admin/communication/noticeCtrl');
 const roomReq = require('../controllers/admin/communication/roomCngReq');
-
-// Gallery Controller
 const galleryCtrl = require('../controllers/admin/gallery/galleryCtrl');
-
-// Dashboard Controller
 const dashboardCtrl = require('../controllers/admin/dashboardController');
 
 // --- Middleware: Ensure User is Admin ---
@@ -65,8 +56,11 @@ router.post('/students/status/:id', studentStatusCtrl.studentStatus );
 // Add Student
 router.post('/students/add', addStdCtrl.addStudent);
 
-// Manually assign a room to a student
+// assign a room to a student
 router.post('/students/assign/:id', manAsnRmCtrl.assignRoom);
+
+// Remove room
+router.post('/students/deallocate/:id', ensureAuthenticated, removeRoomCtrl.removeRoom);
 
 // Delete Student
 router.post('/students/delete/:id',delStdCtrl.deleteStudent);

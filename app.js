@@ -8,31 +8,20 @@ const path = require('path');
 
 const app = express();
 
-// =====================
-// 1. PASSPORT CONFIG
-// =====================
+// PASSPORT CONFIG
 require('./config/passport')(passport);
 
-// =====================
-// 2. DATABASE CONNECTION
-// =====================
-// Database Name 'HMS' kar diya hai taaki Admin Setup wala data yahin mile
+//  DATABASE CONNECTION
 const dbName = 'HMS'; 
 mongoose.connect(`mongodb://127.0.0.1:27017/${dbName}`)
-  .then(() => console.log(`✅ MongoDB Connected to database: ${dbName}`))
-  .catch(err => console.log('❌ MongoDB Connection Error:', err));
-
-// =====================
-// 3. MIDDLEWARE & VIEWS
-// =====================
+  .then(() => console.log(` MongoDB Connected to database: ${dbName}`))
+  .catch(err => console.log(' MongoDB Connection Error:', err));
 
 // EJS Layouts
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Default Layout (Ye 'views/layout.ejs' ko dhundega Home page ke liye)
-// Dashboards ke liye hum specific layout routes me set kar chuke hain
 app.set('layout', 'layout'); 
 
 // Public Folder (CSS/Images)
@@ -41,11 +30,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Body Parser (Form Data)
 app.use(express.urlencoded({ extended: true }));
 
-// =====================
-// 4. SESSION & SECURITY
-// =====================
+// SESSION & SECURITY
 app.use(session({
-  secret: 'hms_premium_secret_key_2025', // Strong secret key
+  secret: 'Made_By_Shubham_Yadav', // Strong secret key
   resave: true,
   saveUninitialized: true
 }));
@@ -66,25 +53,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// =====================
-// 5. ROUTES (UPDATED)
-// =====================
-
-// A. Home & Setup Route (routes/index.js)
+// ROUTES 
+// Home
 app.use('/', require('./routes/index'));
 
-// B. Auth Routes (routes/users.js) - Login/Logout/Redirect
+// Auth Routes 
 app.use('/users', require('./routes/users'));
 
-// C. Protected Dashboards
+// Dashboards
 app.use('/admin', require('./routes/admin'));
 app.use('/staff', require('./routes/staff'));
 app.use('/student', require('./routes/student'));
 
-// =====================
-// 6. ERROR HANDLING (404)
-// =====================
-// Agar koi Aisa route ho jo upar define nahi hai, to 404 dikhao
+// ERROR HANDLING
 app.use((req, res) => {
   res.status(404).send(`
     <div style="text-align:center; padding:50px; font-family:sans-serif;">
@@ -95,8 +76,6 @@ app.use((req, res) => {
   `);
 });
 
-// =====================
-// 7. START SERVER
-// =====================
+// START SERVER
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(` Server running on http://localhost:${PORT}`));
